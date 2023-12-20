@@ -58,14 +58,20 @@ namespace Mind_Master_Backend.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(201, Type = typeof(int))]
         [ProducesResponseType(400, Type = typeof(string))]
-        public IActionResult Register([FromBody] AccountDataTO data)
+        public IActionResult Register([FromBody] AuthRegisterDTO data)
         {
             try
             {
                 if (data.Password != data.PasswordConfirmation) throw new DataConstraintException
                         ("La confirmation du mot de passe n'a pas la même valeur que le mot de passe");
 
-                int id = _AccountService.Create(data.ToNewModel());
+                AccountDataTO newAccount = new AccountDataTO
+                {
+                    Login = data.Login,
+                    Password = data.Password
+                };
+
+                int id = _AccountService.Create(newAccount.ToNewModel());
 
                 return CreatedAtAction(nameof(AccountController.GetOneById), "Account", new { id }, new { id });
             }
