@@ -66,7 +66,13 @@ namespace BLL.Services
             try
             {
                 IdUsed(id);
-                LoginAlreadyUsed(modelUpdated);
+                
+                AccountModel previously = GetOneById(id);
+                // La vérification du pseudo n'a de sens qu'en cas de changement
+                if(modelUpdated.Login != previously.Login)LoginAlreadyUsed(modelUpdated);
+
+                if (!Enum.IsDefined(typeof(RoleModel), modelUpdated.Role)) modelUpdated.Role = previously.Role;
+
                 return _AccountRepository.Update(id,modelUpdated.ToEntity());
             }
             catch (Exception exception)

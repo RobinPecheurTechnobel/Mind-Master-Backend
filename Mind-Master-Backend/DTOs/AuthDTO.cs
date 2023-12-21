@@ -2,6 +2,7 @@
 
 namespace Mind_Master_Backend.DTOs
 {
+    /// <summary>Information à rentrer pour se connecter</summary>
     public class AuthDTO
     {
         [Required]
@@ -10,15 +11,19 @@ namespace Mind_Master_Backend.DTOs
         [Required]
         public string Password { get; set; }
     }
+
+    /// <summary>Information reçu quand un utilisateur est authentifié</summary>
     public class AuthTokenDTO
     {
         public string Token { get; set; }
 
         public AccountDTO Account { get; set; }
     }
+    /// <summary>format des données nécessaire pour s'enregistrer</summary>
     public class AuthRegisterDTO
     {
         [Required]
+        [MaxLength(50,ErrorMessage = "Votre login ne peut dépasser 50 caractères")]
         public string Login { get; set; }
 
         [Required]

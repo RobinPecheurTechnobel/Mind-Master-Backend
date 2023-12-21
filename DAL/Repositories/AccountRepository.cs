@@ -48,9 +48,10 @@ namespace DAL.Repositories
 
             if (accountExist is null) return false;
 
-            entity.Id = id;
+            accountExist.Login = entity.Login;
+            accountExist.Role = entity.Role;
 
-            _MMContext.Accounts.Update(entity);
+            _MMContext.Accounts.Update(accountExist);
             _MMContext.SaveChanges();
             return true;
         }

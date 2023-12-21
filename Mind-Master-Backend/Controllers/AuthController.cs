@@ -11,25 +11,54 @@ using System.Diagnostics.Eventing.Reader;
 
 namespace Mind_Master_Backend.Controllers
 {
+    /// <summary>Controller gèrant la partie Authentification des comptes</summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
+        /// <summary>Instance du service de création de token</summary>
         private TokenService _TokenService;
+        /// <summary>Instance du service gèrant les comptes dans la couche logique</summary>
         private AccountService _AccountService;
 
+        /// <summary>Constructeur permettant les injections de dépendance</summary>
+        /// <param name="tokenService">Injection de dépendance du service pour les tokens</param>
+        /// <param name="accountService">Injection de dépendance du service pour les comptes</param>
         public AuthController(TokenService tokenService, AccountService accountService)
         {
             _TokenService = tokenService;
             _AccountService = accountService;
         }
+
+        /// <summary>
+        ///     EndPoint responsable de l'authentification d'un utilisateur
+        /// </summary>
+        /// <param name="credentials">Information d'authentification</param>
+        /// <returns>
+        ///     <list type="table">
+        ///         <item>
+        ///             <term>Code 200</term>
+        ///             <description>
+        ///                 L'authentification s'est bien passé
+        ///                 L'utilisateur reçoit un token pour accéder à plus de requêtes
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <term>Code 400</term>
+        ///             <description>
+        ///                 L'authentification a échoué
+        ///                 Le détaillé de l'erreur sera a retiré pour la production
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </returns>
         [HttpPost("Login")]
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Login([FromBody] AuthDTO credentials) // TODO change type objet
+        public IActionResult Login([FromBody] AuthDTO credentials)
         {
             try
             {
@@ -53,6 +82,25 @@ namespace Mind_Master_Backend.Controllers
             }
         }
 
+        /// <summary>Endpoint permettant l'enregistrement d'un nouvel utilisateur</summary>
+        /// <param name="data">Information fournit pour l'enregistrement</param>
+        /// <returns>
+        ///     <list type="table">
+        ///         <item>
+        ///             <term>Code 201</term>
+        ///             <description>
+        ///                 L'enregistré s'est bien déroulé
+        ///                 L'identifiant du compte nouvellement créé est fournit, ainsi qu'un lien pour récupérer les informations
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <term>Code 400</term>
+        ///             <description>
+        ///                 L'authentification a échoué
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </returns>
         [HttpPost("Register")]
         [AllowAnonymous]
         [Consumes("application/json")]
@@ -65,7 +113,7 @@ namespace Mind_Master_Backend.Controllers
                 if (data.Password != data.PasswordConfirmation) throw new DataConstraintException
                         ("La confirmation du mot de passe n'a pas la même valeur que le mot de passe");
 
-                AccountDataTO newAccount = new AccountDataTO
+                NewAccountDataTO newAccount = new NewAccountDataTO
                 {
                     Login = data.Login,
                     Password = data.Password

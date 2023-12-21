@@ -7,14 +7,25 @@ using System.Text;
 
 namespace Mind_Master_Backend.Services
 {
+    /// <summary>Service responsable de génération d'un token</summary>
     public class TokenService
     {
+        /// <summary>Instance de Jeu de clée/valeur venant de la configuration de l'appsetting</summary>
         private IConfiguration _Configuration;
 
+        /// <summary>Constructeur</summary>
+        /// <param name="configuration">Injection de la configuration des propriétés du projet</param>
         public TokenService(IConfiguration configuration)
         {
             _Configuration = configuration;
         }
+
+        /// <summary>
+        ///     Génére un token indifiant le compte
+        ///     Ce token donne plus d'accés pour l'utilisateur
+        /// </summary>
+        /// <param name="account">Compte à encapsulé dans le token</param>
+        /// <returns>Un JWT token pour le compte</returns>
         public string GenerateJwt(AccountDTO account)
         {
             // Création de la signature du Jwt sur base d'une clef secret

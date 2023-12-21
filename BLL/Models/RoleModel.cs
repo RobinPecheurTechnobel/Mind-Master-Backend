@@ -1,12 +1,13 @@
-﻿using System;
+﻿using DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Entities
+namespace BLL.Models
 {
-    public enum RoleEntity
+    public enum RoleModel
     {
         User = 0,
         Admin = 1
