@@ -63,15 +63,19 @@ namespace Mind_Master_Backend
             // Add Cors config
             builder.Services.AddCors(opt =>
             {
-                opt.AddPolicy("DemoCors", config =>
+                opt.AddPolicy("MindCors", config =>
                 {
-                    // Tout autoriser
-                    config.AllowAnyOrigin();
-                    config.AllowAnyHeader();
-                    config.AllowAnyMethod();
-
                     // Limiter l'origine de la requete
-                    config.WithOrigins("https://localhost:8080");
+                    config.WithOrigins("http://localhost:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                            
+
+                    // Tout autoriser
+                    //config.AllowAnyOrigin();
+                    //config.AllowAnyHeader();
+                    //config.AllowAnyMethod();
+
                 });
             });
 
@@ -88,6 +92,8 @@ namespace Mind_Master_Backend
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors("MindCors");
 
             app.MapControllers();
 
