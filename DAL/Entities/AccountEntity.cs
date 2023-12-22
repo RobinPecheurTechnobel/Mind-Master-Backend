@@ -42,5 +42,8 @@ namespace DAL.Entities
         }
         [NotMapped]
         public RoleEntity role { get; set; }
+
+        [DeleteBehavior(DeleteBehavior.NoAction)]
+        public ThinkerEntity Thinker { get; set; }
     }
 }
