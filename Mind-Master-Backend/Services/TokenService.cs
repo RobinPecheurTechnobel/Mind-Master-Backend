@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using BLL.CustomExceptions;
+using Microsoft.IdentityModel.Tokens;
 using Mind_Master_Backend.DTOs;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
@@ -46,7 +47,7 @@ namespace Mind_Master_Backend.Services
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _Configuration["JwtOptions:Issuer"],
                 audience: _Configuration["JwtOptions:Audience"],
-                expires: DateTime.Now.AddHours(_Configuration["JwtOptions:Expiration"] is null ? 1 : double.Parse(_Configuration["JwtOptions:Expiration"])),
+                expires: DateTime.Now.AddSeconds(_Configuration["JwtOptions:Expiration"] is null ? 1 : double.Parse(_Configuration["JwtOptions:Expiration"])),
                 claims: claims,
                 signingCredentials: credentials
             );
@@ -54,6 +55,29 @@ namespace Mind_Master_Backend.Services
             // Génération sous forme de chaine de caractere 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+        public int GetIdFromToken(string previousToken)
+        {
+            // Récupérer les informations du tokens
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            if (!tokenHandler.CanReadToken(previousToken)) throw new NotValidTokenException();
+
+            JwtSecurityToken tokenReceived = tokenHandler.ReadJwtToken(previousToken);
+
+            bool valid = tokenReceived.ValidTo > DateTime.UtcNow;
+            // Si le token est encore valide en régénérer un nouveau
+            if (valid)
+            {
+                Claim? claimWithId = tokenReceived.Payload.Claims.Where(claim => claim.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+                if (claimWithId is null) throw new NotValidTokenException();
+                int idFromToken = int.Parse(claimWithId.Value);
+
+                return idFromToken;
+            }
+
+            // Sinon renvoyer une erreur
+            throw new ExpiredTokenException();
         }
     }
 }

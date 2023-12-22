@@ -12,7 +12,7 @@ namespace DAL.Interfaces
 
         TEntity? GetOneById(Tkey id);
 
-        Tkey Create(TEntity entity);
+        TEntity? Create(TEntity entity);
 
         bool Update(Tkey key, TEntity entity);
 

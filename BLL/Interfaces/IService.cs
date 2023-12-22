@@ -10,7 +10,7 @@ namespace BLL.Interfaces
     public interface IService<TKey,TModel>
     {
         // C
-        TKey Create(TModel model);
+        TModel Create(TModel model);
 
         // R
         IEnumerable<TModel> GetAll();

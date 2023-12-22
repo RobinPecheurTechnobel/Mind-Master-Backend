@@ -23,7 +23,7 @@ namespace BLL.Services
 
         // Crud
         // TODO ARGON2Service
-        public int Create(AccountModel model)
+        public AccountModel Create(AccountModel model)
         {
             try
             {
@@ -31,8 +31,11 @@ namespace BLL.Services
 
                 model.HashPassword = _ArgonService.Hash(model.HashPassword);
 
-                int idCreated = _AccountRepository.Create(model.ToEntity());
-                return idCreated;
+                AccountModel? result = _AccountRepository.Create(model.ToEntity())?.ToModel();
+
+                if (result is null) throw new Exception();
+
+                return result;
             }
             catch(Exception exception)
             {

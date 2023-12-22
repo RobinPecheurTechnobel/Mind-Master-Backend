@@ -90,7 +90,7 @@ namespace Mind_Master_Backend.Controllers
         ///             <term>Code 201</term>
         ///             <description>
         ///                 L'enregistré s'est bien déroulé
-        ///                 L'identifiant du compte nouvellement créé est fournit, ainsi qu'un lien pour récupérer les informations
+        ///                 Le token pour demander une reconnexion
         ///             </description>
         ///         </item>
         ///         <item>
@@ -104,7 +104,7 @@ namespace Mind_Master_Backend.Controllers
         [HttpPost("Register")]
         [AllowAnonymous]
         [Consumes("application/json")]
-        [ProducesResponseType(201, Type = typeof(int))]
+        [ProducesResponseType(201, Type = typeof(string))]
         [ProducesResponseType(400, Type = typeof(string))]
         public IActionResult Register([FromBody] AuthRegisterDTO data)
         {
@@ -119,15 +119,43 @@ namespace Mind_Master_Backend.Controllers
                     Password = data.Password
                 };
 
-                int id = _AccountService.Create(newAccount.ToNewModel());
+                AccountDTO account = _AccountService.Create(newAccount.ToNewModel()).ToDTO();
 
-                return CreatedAtAction(nameof(AccountController.GetOneById), "Account", new { id }, new { id });
+                string token = "Bearer " + _TokenService.GenerateJwt(account);
+                return CreatedAtAction(nameof(Reconnection),null, new { token });
+                //return CreatedAtAction(nameof(AccountController.GetOneById), "Account", new { id },new {id});
             }
             catch (DataConstraintException dataException)
             {
                 return BadRequest(dataException.Message);
             }
             catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpGet("Reconnection")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AuthTokenDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Reconnection([FromHeader] string Authorization)
+        {
+            try
+            {
+
+                string tokenReceived = Authorization.Replace("Bearer ", "");
+                int id = _TokenService.GetIdFromToken(tokenReceived);
+
+                AccountDTO account = _AccountService.GetOneById(id).ToDTO();
+
+                string token = "Bearer " + _TokenService.GenerateJwt(account);
+                return Ok(token);
+            }
+            catch(TokenException tException)
+            {
+                return BadRequest(tException.Message);
+            }
+            catch(Exception exception)
             {
                 return BadRequest(exception.Message);
             }

@@ -20,13 +20,13 @@ namespace DAL.Repositories
 
 
         // Crud TODO check for unicity
-        public int Create(AccountEntity entity)
+        public AccountEntity? Create(AccountEntity entity)
         {
-            if (isLoginAlredayUsed(entity.Login)) return -1;
+            if (isLoginAlredayUsed(entity.Login)) return null;
 
             _MMContext.Accounts.Add(entity);
             _MMContext.SaveChanges();
-            return entity.Id;
+            return entity;
         }
 
         // cRud
