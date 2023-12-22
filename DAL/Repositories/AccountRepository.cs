@@ -12,17 +12,24 @@ namespace DAL.Repositories
     public class AccountRepository : IRepository<int,AccountEntity>
     {
         private MindMasterContext _MMContext;
+        private ThinkerRepository _thinkerRepo;
 
-        public AccountRepository(MindMasterContext mMContext)
+        public AccountRepository(MindMasterContext mMContext, ThinkerRepository thRepo)
         {
             _MMContext = mMContext;
+            _thinkerRepo = thRepo;
         }
 
 
-        // Crud TODO check for unicity
+        // Crud
         public AccountEntity? Create(AccountEntity entity)
         {
             if (isLoginAlredayUsed(entity.Login)) return null;
+
+            ThinkerEntity thinker = _thinkerRepo.Create(
+                new ThinkerEntity { Pseudo = entity.Login });
+
+            entity.Thinker = thinker;
 
             _MMContext.Accounts.Add(entity);
             _MMContext.SaveChanges();

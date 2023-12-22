@@ -18,7 +18,8 @@ namespace BLL.Mappers
                 Id = entity.Id,
                 Login = entity.Login,
                 HashPassword = entity.HashPassword,
-                Role = entity.role.ToModel()
+                Role = entity.role.ToModel(),
+                Thinker = entity.Thinker.ToModel()
             };
         }
         public static AccountEntity ToEntity(this AccountModel model)
@@ -28,7 +29,9 @@ namespace BLL.Mappers
                 Id = model.Id,
                 Login = model.Login,
                 HashPassword = model.HashPassword!,
-                role = model.Role.ToEntity()
+                role = model.Role.ToEntity(),
+                Thinker = model.Thinker.ToEntity() ?? null
+
             };
         }
 

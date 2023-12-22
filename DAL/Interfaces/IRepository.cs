@@ -14,9 +14,9 @@ namespace DAL.Interfaces
 
         TEntity? Create(TEntity entity);
 
-        bool Update(Tkey key, TEntity entity);
+        bool Update(Tkey id, TEntity entity);
 
-        bool Delete(Tkey key);
+        bool Delete(Tkey id);
 
 
     }

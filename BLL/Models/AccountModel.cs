@@ -12,5 +12,7 @@ namespace BLL.Models
         public string Login { get; set; }
         public RoleModel Role { get; set; }
         public string? HashPassword { get; set; }
+
+        public ThinkerModel Thinker { get; set; }
     }
 }

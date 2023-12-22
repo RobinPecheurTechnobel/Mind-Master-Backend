@@ -35,6 +35,7 @@ namespace Mind_Master_Backend
 
             //DAL
             builder.Services.AddScoped<AccountRepository>();
+            builder.Services.AddScoped<ThinkerRepository>();
 
             // BLL
             builder.Services.AddScoped<Argon2Service>();

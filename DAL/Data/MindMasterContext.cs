@@ -16,6 +16,7 @@ namespace DAL.Data
         }
 
         public DbSet<AccountEntity> Accounts { get; set; }
+        public DbSet<ThinkerEntity> Thinkers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
