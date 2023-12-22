@@ -149,7 +149,8 @@ namespace Mind_Master_Backend.Controllers
                 AccountDTO account = _AccountService.GetOneById(id).ToDTO();
 
                 string token = "Bearer " + _TokenService.GenerateJwt(account);
-                return Ok(token);
+
+                return Ok(new AuthTokenDTO { Token = token, Account = account });
             }
             catch(TokenException tException)
             {
