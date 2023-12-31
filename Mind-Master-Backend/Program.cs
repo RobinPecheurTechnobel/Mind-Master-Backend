@@ -34,15 +34,18 @@ namespace Mind_Master_Backend
                 options.UseSqlServer(builder.Configuration.GetConnectionString("local")));
 
             //DAL
-            builder.Services.AddScoped<AccountRepository>();
             builder.Services.AddScoped<ThinkerRepository>();
+            builder.Services.AddScoped<GroupRepository>();
 
             // BLL
             builder.Services.AddScoped<Argon2Service>();
-            builder.Services.AddScoped<AccountService>();
+            builder.Services.AddScoped<ThinkerService>();
+            builder.Services.AddScoped<GroupService>();
 
             // API
             builder.Services.AddTransient<TokenService>();
+
+
             // Add JWT config
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

@@ -19,15 +19,15 @@ namespace Mind_Master_Backend.Controllers
         /// <summary>Instance du service de création de token</summary>
         private TokenService _TokenService;
         /// <summary>Instance du service gèrant les comptes dans la couche logique</summary>
-        private AccountService _AccountService;
+        private ThinkerService _ThinkerService;
 
         /// <summary>Constructeur permettant les injections de dépendance</summary>
         /// <param name="tokenService">Injection de dépendance du service pour les tokens</param>
         /// <param name="accountService">Injection de dépendance du service pour les comptes</param>
-        public AuthController(TokenService tokenService, AccountService accountService)
+        public AuthController(TokenService tokenService, ThinkerService thinkerService)
         {
             _TokenService = tokenService;
-            _AccountService = accountService;
+            _ThinkerService = thinkerService;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                AccountDTO accountDto = _AccountService.Login(credentials.Login, credentials.Password)?.ToDTO();
+                ThinkerDTO accountDto = _ThinkerService.Login(credentials.Login, credentials.Password)?.ToDTO();
 
                 string token = "Bearer "+_TokenService.GenerateJwt(accountDto);
                 
@@ -119,7 +119,7 @@ namespace Mind_Master_Backend.Controllers
                     Password = data.Password
                 };
 
-                AccountDTO account = _AccountService.Create(newAccount.ToNewModel()).ToDTO();
+                ThinkerDTO account = _ThinkerService.Create(newAccount.ToNewModel()).ToDTO();
 
                 string token = "Bearer " + _TokenService.GenerateJwt(account);
                 return CreatedAtAction(nameof(Reconnection),null, new { token });
@@ -146,7 +146,7 @@ namespace Mind_Master_Backend.Controllers
                 string tokenReceived = Authorization.Replace("Bearer ", "");
                 int id = _TokenService.GetIdFromToken(tokenReceived);
 
-                AccountDTO account = _AccountService.GetOneById(id).ToDTO();
+                ThinkerDTO account = _ThinkerService.GetOneById(id).ToDTO();
 
                 string token = "Bearer " + _TokenService.GenerateJwt(account);
 

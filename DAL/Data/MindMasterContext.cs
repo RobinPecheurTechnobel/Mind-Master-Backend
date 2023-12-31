@@ -1,26 +1,25 @@
 ﻿using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Data
 {
     public class MindMasterContext : DbContext
     {
         public MindMasterContext(DbContextOptions options) : base(options) {
+            //DbInitializer.Initialize(this);
         }
 
-        public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<ThinkerEntity> Thinkers { get; set; }
+        public DbSet<GroupEntity> Groups { get; set; }
+        public DbSet<GroupThinkerEntity> GroupThinkers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

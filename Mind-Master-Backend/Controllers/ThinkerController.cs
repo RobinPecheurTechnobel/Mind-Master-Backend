@@ -16,16 +16,16 @@ namespace Mind_Master_Backend.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class ThinkerController : ControllerBase
     {
         /// <summary>Instance du service qui gère les comptes dans la couche logique</summary>
-        private AccountService _AccountService;
+        private ThinkerService _ThinkerService;
 
         /// <summary>Constructeur pour les injections de dépendance</summary>
-        /// <param name="accountService">Injection de dépendance du service de gestion des comptes</param>
-        public AccountController(AccountService accountService)
+        /// <param name="thinkerService">Injection de dépendance du service de gestion des comptes</param>
+        public ThinkerController(ThinkerService thinkerService)
         {
-            _AccountService = accountService;
+            _ThinkerService = thinkerService;
         }
 
         /// <summary>EndPoint pour récupérer une liste des comptes</summary>
@@ -39,10 +39,10 @@ namespace Mind_Master_Backend.Controllers
         ///     </list>
         /// </returns>
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<AccountDTO>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ThinkerDTO>))]
         public IActionResult GetAll()
         {
-            IEnumerable<AccountDTO> result = _AccountService.GetAll().Select(a => a.ToDTO());
+            IEnumerable<ThinkerDTO> result = _ThinkerService.GetAll().Select(a => a.ToDTO());
             return Ok(result);
         }
 
@@ -65,6 +65,21 @@ namespace Mind_Master_Backend.Controllers
                 .Select(d => new EnumDTO(d));
             return Ok(result);
         }
+        /**/
+        [HttpGet("Group/{thinkerId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<GroupDTO>))]
+        [ProducesResponseType(404, Type = typeof(IEnumerable<string>))]
+        public IActionResult GetGroupByThinkerId(int thinkerId)
+        {
+            try
+            {
+                return Ok(_ThinkerService.GetGroup(thinkerId).Select(g => g.ToDTO()));
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+        }/**/
 
         [HttpGet("Role/{id}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<RoleDTO>))]
@@ -106,13 +121,13 @@ namespace Mind_Master_Backend.Controllers
         /// </returns>
         [HttpGet("{id}")]
         [ActionName("GetOneById")]
-        [ProducesResponseType(200, Type = typeof(AccountDTO))]
+        [ProducesResponseType(200, Type = typeof(ThinkerFullDTO))]
         [ProducesResponseType(404, Type = typeof(string))]
         public IActionResult GetOneById([FromRoute] int id)
         {
             try
             {
-                return Ok(_AccountService.GetOneById(id).ToDTO());
+                return Ok(_ThinkerService.GetOneById(id).ToFullDTO());
             }
             catch (NotFoundException nFException)
             {
@@ -151,11 +166,11 @@ namespace Mind_Master_Backend.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400, Type = typeof(string))]
         [ProducesResponseType(404, Type = typeof(string))]
-        public IActionResult Update([FromRoute] int id, [FromBody] AccountDataTO DataTo)
+        public IActionResult Update([FromRoute] int id, [FromBody] ThinkerDataTO DataTo)
         {
             try
             {
-                _AccountService.Update(id, DataTo.ToModel());
+                _ThinkerService.Update(id, DataTo.ToModel());
                 return NoContent();
             }
             catch(DataConstraintException dataException)
@@ -194,7 +209,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                if(_AccountService.Delete(id)) return NoContent();
+                if(_ThinkerService.Delete(id)) return NoContent();
                 return NotFound();
 
             }

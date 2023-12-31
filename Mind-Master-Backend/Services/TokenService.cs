@@ -27,7 +27,7 @@ namespace Mind_Master_Backend.Services
         /// </summary>
         /// <param name="account">Compte à encapsulé dans le token</param>
         /// <returns>Un JWT token pour le compte</returns>
-        public string GenerateJwt(AccountDTO account)
+        public string GenerateJwt(ThinkerDTO account)
         {
             // Création de la signature du Jwt sur base d'une clef secret
             byte[] key = Encoding.UTF8.GetBytes(_Configuration["JwtOptions:Secret"]);

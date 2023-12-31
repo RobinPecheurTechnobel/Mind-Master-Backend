@@ -1,10 +1,5 @@
 ﻿using BLL.Models;
 using DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Mappers
 {
@@ -15,22 +10,38 @@ namespace BLL.Mappers
             return new ThinkerModel
             {
                 Id = entity.Id,
-                LastName = entity.LastName,
-                FirstName = entity.FirstName,
+                Login = entity.Login,
+                HashPassword = entity.HashPassword,
+                Role = entity.role.ToModel(),
+                Pseudo = entity.Pseudo,
+                Email = entity.Email,
+                GroupThinkers = null
+            };
+        }
+        public static ThinkerSimpleModel ToSimpleModel(this ThinkerEntity entity)
+        {
+            return new ThinkerSimpleModel
+            {
+                Id = entity.Id,
+                Login = entity.Login,
+                HashPassword = entity.HashPassword,
+                Role = entity.role.ToModel(),
                 Pseudo = entity.Pseudo,
                 Email = entity.Email
             };
         }
-        public static ThinkerEntity ToEntity(this ThinkerModel model)
+        public static ThinkerEntity ToEntity(this ThinkerSimpleModel model)
         {
             return new ThinkerEntity
             {
                 Id = model.Id,
-                LastName = model.LastName,
-                FirstName = model.FirstName,
+                Login = model.Login,
+                HashPassword = model.HashPassword!,
+                role = model.Role.ToEntity(),
                 Pseudo = model.Pseudo,
                 Email = model.Email
             };
         }
+
     }
 }

@@ -11,8 +11,12 @@ namespace BLL.CustomExceptions
         public NotFoundException (string message) : base(message) { }
     }
 
-    public class AccountNotFoundException : NotFoundException
+    public class ThinkerNotFoundException : NotFoundException
     {
-        public AccountNotFoundException(string message = "Ce compte n'existe pas") : base(message) { }
+        public ThinkerNotFoundException(string message = "Ce compte n'existe pas") : base(message) { }
+    }
+    public class GroupNotFoundException : NotFoundException
+    {
+        public GroupNotFoundException(string message = "Ce groupe n'existe pas") : base(message) { }
     }
 }

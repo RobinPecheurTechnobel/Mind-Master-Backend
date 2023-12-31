@@ -10,58 +10,80 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class ThinkerRepository : IRepository<int, ThinkerEntity>
+    public class ThinkerRepository : AbstractRepository<int, ThinkerEntity>
     {
         private MindMasterContext _MMContext;
 
         public ThinkerRepository(MindMasterContext mMContext)
         {
             _MMContext = mMContext;
+            _dbSet = _MMContext.Thinkers;
         }
 
-        public ThinkerEntity? Create(ThinkerEntity entity)
+
+        // Crud
+        public override ThinkerEntity? Create(ThinkerEntity entity)
         {
+            if (isLoginAlredayUsed(entity.Login)) return null;
+
+            entity.Pseudo = entity.Login;
+
             _MMContext.Thinkers.Add(entity);
             _MMContext.SaveChanges();
+
+
+
+
             return entity;
         }
 
-        public bool Delete(int id)
-        {
-            ThinkerEntity? entity = GetOneById(id);
-
-            if (entity is null) return false;
-
-            _MMContext.Thinkers.Remove(entity);
-            _MMContext.SaveChanges();
-
-            return true;
-        }
-
+        // cRud
         public IEnumerable<ThinkerEntity> GetAll()
         {
             return _MMContext.Thinkers;
         }
 
-        public ThinkerEntity? GetOneById(int id)
+        public ThinkerEntity? FindByLogin(string login)
         {
-            return _MMContext.Thinkers.Where(thinker => thinker.Id == id).FirstOrDefault();
+            return _MMContext.Thinkers.Where(account => account.Login == login).FirstOrDefault();
+        }
+        //Contraintes
+        public bool isLoginAlredayUsed(string login)
+        {
+            int count = _MMContext.Thinkers.Count(account => account.Login == login);
+
+            if (count > 0) return true;
+            return false;
         }
 
-        public bool Update(int id, ThinkerEntity entity)
+
+        protected override Func<ThinkerEntity, bool> PredicateIdentifier(int id)
         {
-            ThinkerEntity? thinkerExist = GetOneById(id);
+            return t => t.Id == id;
+        }
 
-            if (thinkerExist is null) return false;
+        public override ThinkerEntity MapperEntity(ThinkerEntity oldOne, ThinkerEntity entity)
+        {
+            ThinkerEntity fusion = oldOne;
 
-            thinkerExist.FirstName = entity.FirstName;
-            thinkerExist.LastName = entity.LastName;
-            thinkerExist.Pseudo = entity.Pseudo;
-            thinkerExist.Email = entity.Email;
+            oldOne.Login = entity.Login;
+            oldOne.Pseudo = entity.Pseudo;
+            oldOne.Role = entity.Role;
+            oldOne.Email = entity.Email ?? oldOne.Email;
 
-            _MMContext.Thinkers.Update(thinkerExist);
+            return fusion;
+        }
+        public override void SaveChanges()
+        {
             _MMContext.SaveChanges();
-            return true;
+        }
+
+        public IEnumerable<GroupThinkerEntity> getGroups(int id)
+        {
+            IEnumerable < GroupThinkerEntity > groups =_MMContext.GroupThinkers
+                .Include(gt => gt.Group)
+                .Where(gt => gt.ThinkerId == id);
+            return groups;
         }
     }
 }

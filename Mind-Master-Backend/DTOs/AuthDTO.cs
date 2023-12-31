@@ -17,7 +17,7 @@ namespace Mind_Master_Backend.DTOs
     {
         public string Token { get; set; }
 
-        public AccountDTO Account { get; set; }
+        public ThinkerDTO Account { get; set; }
     }
     /// <summary>format des données nécessaire pour s'enregistrer</summary>
     public class AuthRegisterDTO
