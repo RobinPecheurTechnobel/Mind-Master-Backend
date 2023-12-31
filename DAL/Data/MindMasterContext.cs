@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using DAL.Entities.Relations;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Data

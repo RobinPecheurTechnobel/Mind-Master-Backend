@@ -1,5 +1,5 @@
 ﻿using BLL.Models;
-using DAL.Entities;
+using DAL.Entities.Relations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

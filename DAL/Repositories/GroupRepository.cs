@@ -1,5 +1,6 @@
 ﻿using DAL.Data;
 using DAL.Entities;
+using DAL.Entities.Relations;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
