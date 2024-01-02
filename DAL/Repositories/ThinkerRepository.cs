@@ -13,7 +13,6 @@ namespace DAL.Repositories
 {
     public class ThinkerRepository : AbstractRepository<int, ThinkerEntity>
     {
-        private MindMasterContext _MMContext;
 
         public ThinkerRepository(MindMasterContext mMContext)
         {

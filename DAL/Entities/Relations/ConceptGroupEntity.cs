@@ -16,5 +16,8 @@ namespace DAL.Entities.Relations
         public int ConceptId { get; set; }
         [ForeignKey("Group")]
         public int GroupId { get; set; }
+
+        public virtual ConceptEntity Concept { get; set; }
+        public virtual GroupEntity Group { get; set; }
     }
 }

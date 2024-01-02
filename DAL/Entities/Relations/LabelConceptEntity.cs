@@ -17,5 +17,8 @@ namespace DAL.Entities.Relations
         public int LabelId { get; set; }
         [ForeignKey("Concept")]
         public int ConceptId { get; set; }
+
+        public virtual ConceptEntity Concept { get; set; }
+        public virtual LabelEntity Label { get; set; }
     }
 }

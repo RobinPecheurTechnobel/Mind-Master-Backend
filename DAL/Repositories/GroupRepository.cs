@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DAL.Repositories
@@ -69,6 +70,33 @@ namespace DAL.Repositories
             SaveChanges();
 
             return true;
+        }
+        //TODO Tester
+        public IEnumerable<ConceptIdeaEntity> GetConcepts(int groupId)
+        {
+            IEnumerable<int> ConceptsId = _MMContext.ConceptGroups
+                .Include(lc => lc.Group)
+            .Include(lc => lc.Concept)
+                .Where(lc => lc.GroupId == groupId)
+                .Select(lc => lc.ConceptId);
+            return _MMContext.ConceptIdeas
+                .Include(ci => ci.Concept)
+                .Include(ci => ci.Idea)
+                .Where(ci => ConceptsId.Contains(ci.ConceptId));
+        }
+        //TODO Tester
+        public IEnumerable<AssemblyEntity> GetAssemblies(int groupId)
+        {
+            IEnumerable<int> AssmebliesId = _MMContext.GroupAssemblies
+                .Include(ga => ga.Group)
+                .Include(ga => ga.Assembly)
+                .Where(ga => ga.GroupId == groupId)
+                .Select(ga => ga.AssemblyId);
+            return _MMContext.ConceptAssemblies
+                .Include(ca => ca.ConceptIdeas)
+                .Include(ca => ca.Assembly)
+                .Where(ca => AssmebliesId.Contains(ca.AssemblyId))
+                .Select(ca => ca.Assembly);
         }
     }
 }

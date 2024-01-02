@@ -16,5 +16,8 @@ namespace DAL.Entities.Relations
         public int AssemblyId { get; set; }
         [ForeignKey("Group")]
         public int GroupId { get; set; }
+
+        public AssemblyEntity Assembly { get; set; }
+        public GroupEntity Group { get; set; }
     }
 }

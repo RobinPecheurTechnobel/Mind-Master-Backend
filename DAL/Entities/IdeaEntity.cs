@@ -40,5 +40,7 @@ namespace DAL.Entities
         public string? Source { get; set; }
         [ForeignKey("Thinker")]
         public int ThinkerId { get; set; }
+
+        public  virtual ThinkerEntity Thinker { get; set; }
     }
 }

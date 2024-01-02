@@ -23,5 +23,8 @@ namespace DAL.Entities.Relations
         public int IdeaId { get; set; }
         [Required]
         public uint Order { get; set; }
+
+        public virtual ConceptEntity Concept {get; set;}
+        public virtual IdeaEntity Idea { get; set; }
     }
 }

@@ -16,5 +16,8 @@ namespace DAL.Entities.Relations
         public int LabelId { get; set; }
         [ForeignKey("Assembly")]
         public int AssemblyId { get; set; }
+
+        public virtual LabelEntity Label { get; set; }
+        public virtual AssemblyEntity Assembly { get; set; }
     }
 }
