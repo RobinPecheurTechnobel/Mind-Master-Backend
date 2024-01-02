@@ -17,4 +17,3 @@ namespace DAL.Entities
         public int Id { get; set; }
     }
 }
-}

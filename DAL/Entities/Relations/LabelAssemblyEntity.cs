@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace DAL.Entities.Relations
 {
-    [Table("GroupAssembly", Schema = "Idea")]
-    [PrimaryKey(nameof(AssemblyId), nameof(GroupId))]
-    public class GroupAssemblyEntity
+    [Table("LabelAssembly", Schema = "Idea")]
+    [PrimaryKey(nameof(LabelId), nameof(AssemblyId))]
+    public class LabelAssemblyEntity
     {
+        [ForeignKey("Label")]
+        public int LabelId { get; set; }
         [ForeignKey("Assembly")]
         public int AssemblyId { get; set; }
-        [ForeignKey("Group")]
-        public int GroupId { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using BLL.Models;
-using DAL.Entities.Enum;
+using DAL.Entities.Enums;
 
 namespace BLL.Mappers
 {
