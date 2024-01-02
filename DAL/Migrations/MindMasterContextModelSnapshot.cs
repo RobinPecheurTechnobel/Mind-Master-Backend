@@ -95,6 +95,9 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Format")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -102,6 +105,9 @@ namespace DAL.Migrations
 
                     b.Property<DateTime>("LastUpdateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Source")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ThinkerId")
                         .HasColumnType("int");

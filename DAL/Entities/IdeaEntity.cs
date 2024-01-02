@@ -35,6 +35,10 @@ namespace DAL.Entities
         }
         [NotMapped]
         public FormatEntity format { get; set; }
+
+        public string? Content { get; set; }
+        public string? Source { get; set; }
+        [ForeignKey("Thinker")]
         public int ThinkerId { get; set; }
     }
 }
