@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(MindMasterContext))]
-    [Migration("20240102093221_Idea")]
+    [Migration("20240102102555_Idea")]
     partial class Idea
     {
         /// <inheritdoc />
@@ -160,7 +160,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConceptAssemblies");
+                    b.ToTable("ConceptAssembly", "Idea");
                 });
 
             modelBuilder.Entity("DAL.Entities.Relations.ConceptGroupEntity", b =>
@@ -172,6 +172,8 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ConceptId", "GroupId");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("ConceptGroup", "Idea");
                 });
@@ -194,6 +196,10 @@ namespace DAL.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ConceptId");
+
+                    b.HasIndex("IdeaId");
 
                     b.ToTable("ConceptIdea", "Idea");
                 });
@@ -233,6 +239,8 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("LabelId", "ConceptId");
+
+                    b.HasIndex("ConceptId");
 
                     b.ToTable("LabelConcept", "Idea");
                 });
@@ -289,6 +297,63 @@ namespace DAL.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Thinker");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Relations.ConceptGroupEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.ConceptEntity", "Concept")
+                        .WithMany()
+                        .HasForeignKey("ConceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.GroupEntity", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Concept");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Relations.ConceptIdeaEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.ConceptEntity", "Concept")
+                        .WithMany()
+                        .HasForeignKey("ConceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.IdeaEntity", "Idea")
+                        .WithMany()
+                        .HasForeignKey("IdeaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Concept");
+
+                    b.Navigation("Idea");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Relations.LabelConceptEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.ConceptEntity", "Concept")
+                        .WithMany()
+                        .HasForeignKey("ConceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.LabelEntity", "Label")
+                        .WithMany()
+                        .HasForeignKey("LabelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Concept");
+
+                    b.Navigation("Label");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,17 +11,17 @@ namespace DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
             //migrationBuilder.DropTable(
             //    name: "GroupThinker",
             //    schema: "User");
             //migrationBuilder.DropTable(
-            //    name: "Thinker",
-            //    schema: "User");
-
-            //migrationBuilder.DropTable(
             //    name: "Group",
             //    schema: "User");
 
+            //migrationBuilder.DropTable(
+            //    name: "Thinker",
+            //    schema: "User");
 
             migrationBuilder.EnsureSchema(
                 name: "Idea");
@@ -56,7 +56,8 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConceptAssemblies",
+                name: "ConceptAssembly",
+                schema: "Idea",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -67,36 +68,7 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConceptAssemblies", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ConceptGroup",
-                schema: "Idea",
-                columns: table => new
-                {
-                    ConceptId = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConceptGroup", x => new { x.ConceptId, x.GroupId });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ConceptIdea",
-                schema: "Idea",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ConceptId = table.Column<int>(type: "int", nullable: false),
-                    IdeaId = table.Column<int>(type: "int", nullable: false),
-                    Order = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConceptIdea", x => x.Id);
+                    table.PrimaryKey("PK_ConceptAssembly", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,19 +146,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LabelConcept",
-                schema: "Idea",
-                columns: table => new
-                {
-                    LabelId = table.Column<int>(type: "int", nullable: false),
-                    ConceptId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LabelConcept", x => new { x.LabelId, x.ConceptId });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Thinker",
                 schema: "User",
                 columns: table => new
@@ -202,6 +161,90 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Thinker", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConceptGroup",
+                schema: "Idea",
+                columns: table => new
+                {
+                    ConceptId = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConceptGroup", x => new { x.ConceptId, x.GroupId });
+                    table.ForeignKey(
+                        name: "FK_ConceptGroup_Concept_ConceptId",
+                        column: x => x.ConceptId,
+                        principalSchema: "Idea",
+                        principalTable: "Concept",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConceptGroup_Group_GroupId",
+                        column: x => x.GroupId,
+                        principalSchema: "User",
+                        principalTable: "Group",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConceptIdea",
+                schema: "Idea",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConceptId = table.Column<int>(type: "int", nullable: false),
+                    IdeaId = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConceptIdea", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConceptIdea_Concept_ConceptId",
+                        column: x => x.ConceptId,
+                        principalSchema: "Idea",
+                        principalTable: "Concept",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConceptIdea_Idea_IdeaId",
+                        column: x => x.IdeaId,
+                        principalSchema: "Idea",
+                        principalTable: "Idea",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LabelConcept",
+                schema: "Idea",
+                columns: table => new
+                {
+                    LabelId = table.Column<int>(type: "int", nullable: false),
+                    ConceptId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LabelConcept", x => new { x.LabelId, x.ConceptId });
+                    table.ForeignKey(
+                        name: "FK_LabelConcept_Concept_ConceptId",
+                        column: x => x.ConceptId,
+                        principalSchema: "Idea",
+                        principalTable: "Concept",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LabelConcept_Label_LabelId",
+                        column: x => x.LabelId,
+                        principalSchema: "Idea",
+                        principalTable: "Label",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -233,10 +276,34 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConceptGroup_GroupId",
+                schema: "Idea",
+                table: "ConceptGroup",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConceptIdea_ConceptId",
+                schema: "Idea",
+                table: "ConceptIdea",
+                column: "ConceptId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConceptIdea_IdeaId",
+                schema: "Idea",
+                table: "ConceptIdea",
+                column: "IdeaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GroupThinker_GroupId",
                 schema: "User",
                 table: "GroupThinker",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LabelConcept_ConceptId",
+                schema: "Idea",
+                table: "LabelConcept",
+                column: "ConceptId");
         }
 
         /// <inheritdoc />
@@ -247,11 +314,8 @@ namespace DAL.Migrations
                 schema: "Idea");
 
             migrationBuilder.DropTable(
-                name: "Concept",
+                name: "ConceptAssembly",
                 schema: "Idea");
-
-            migrationBuilder.DropTable(
-                name: "ConceptAssemblies");
 
             migrationBuilder.DropTable(
                 name: "ConceptGroup",
@@ -270,19 +334,15 @@ namespace DAL.Migrations
                 schema: "User");
 
             migrationBuilder.DropTable(
-                name: "Idea",
-                schema: "Idea");
-
-            migrationBuilder.DropTable(
-                name: "Label",
-                schema: "Idea");
-
-            migrationBuilder.DropTable(
                 name: "LabelAssembly",
                 schema: "Idea");
 
             migrationBuilder.DropTable(
                 name: "LabelConcept",
+                schema: "Idea");
+
+            migrationBuilder.DropTable(
+                name: "Idea",
                 schema: "Idea");
 
             migrationBuilder.DropTable(
@@ -292,6 +352,14 @@ namespace DAL.Migrations
             migrationBuilder.DropTable(
                 name: "Thinker",
                 schema: "User");
+
+            migrationBuilder.DropTable(
+                name: "Concept",
+                schema: "Idea");
+
+            migrationBuilder.DropTable(
+                name: "Label",
+                schema: "Idea");
         }
     }
 }

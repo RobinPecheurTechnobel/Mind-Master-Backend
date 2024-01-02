@@ -5,9 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Entities.Relations
 {
+    [Table("ConceptAssembly", Schema = "Idea")]
+    [PrimaryKey(nameof(Id))]
     public class ConceptAssemblyEntity
     {
         [Key]
