@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
-    [Table("Blueprint", Schema = "Idea")]
+    [Table("Label", Schema = "Idea")]
     [PrimaryKey(nameof(Id))]
-    public class BlueprintEntity
+    public class LabelEntity
     {
         [Key]
         public int Id { get; set; }
+        [Required]
+        [MaxLength(100, ErrorMessage = "Le pseudo ne peut dépasser 100 caractères")]
+        public string Title { get; set; }
     }
 }

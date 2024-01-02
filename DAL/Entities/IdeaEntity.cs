@@ -35,5 +35,6 @@ namespace DAL.Entities
         }
         [NotMapped]
         public FormatEntity format { get; set; }
+        public int ThinkerId { get; set; }
     }
 }
