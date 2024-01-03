@@ -15,5 +15,9 @@ namespace DAL.Entities
     {
         [Key]
         public int Id { get; set; }
+
+        [Required]
+        [MaxLength(100, ErrorMessage = "Le pseudo ne peut dépasser 100 caractères")]
+        public string Title { get; set; }
     }
 }

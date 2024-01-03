@@ -11,18 +11,6 @@ namespace DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
-            //migrationBuilder.DropTable(
-            //    name: "GroupThinker",
-            //    schema: "User");
-            //migrationBuilder.DropTable(
-            //    name: "Group",
-            //    schema: "User");
-
-            //migrationBuilder.DropTable(
-            //    name: "Thinker",
-            //    schema: "User");
-
             migrationBuilder.EnsureSchema(
                 name: "Idea");
 
@@ -35,7 +23,8 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,7 +37,8 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
