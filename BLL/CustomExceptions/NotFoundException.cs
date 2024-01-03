@@ -23,4 +23,8 @@ namespace BLL.CustomExceptions
     {
         public IdeaNotFoundException(string message = "Cet idée n'existe pas") : base(message) { }
     }
+    public class LabelNotFoundException : NotFoundException
+    {
+        public LabelNotFoundException(string message = "Ce tag n'existe pas") : base(message) { }
+    }
 }
