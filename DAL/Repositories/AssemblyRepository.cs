@@ -54,5 +54,12 @@ namespace DAL.Repositories
                 .Include(ca => ca.ConceptIdeas)
                 .Where(ca => AssembliesId.Contains(ca.AssemblyId));
         }
+        public IEnumerable<ConceptAssemblyEntity> GetByTitle(string title)
+        {
+            return _MMContext.ConceptAssemblies
+                .Include(ca => ca.Assembly)
+                .Include(ca => ca.ConceptIdeas)
+                .Where(ca => ca.Assembly.Title.Contains(title));
+        }
     }
 }

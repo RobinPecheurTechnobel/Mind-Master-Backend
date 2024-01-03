@@ -62,5 +62,12 @@ namespace DAL.Repositories
                 .Where(cg => cg.ConceptId == conceptId)
                 .Select(lc => lc.Group).First();
         }
+        public IEnumerable<ConceptIdeaEntity> GetByTitle(string title)
+        {
+            return _MMContext.ConceptIdeas
+                .Include(ci => ci.Concept)
+                .Include(ci => ci.Idea)
+                .Where(ci => ci.Concept.Title.Contains(title));
+        }
     }
 }
