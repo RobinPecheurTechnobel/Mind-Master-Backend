@@ -1,4 +1,4 @@
-﻿using BLL.Models;
+﻿using BLL.Models.Enums;
 using DAL.Entities.Enums;
 
 namespace BLL.Mappers

@@ -1,4 +1,4 @@
-﻿using BLL.Models;
+﻿using BLL.Models.Relations;
 using DAL.Entities;
 
 namespace BLL.Mappers

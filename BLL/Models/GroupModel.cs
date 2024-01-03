@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Models.Relations;
 
 namespace BLL.Models
 {
-    public class GroupModel :GroupSimpleModel
+    public class GroupModel : GroupSimpleModel
     {
         public IEnumerable<GroupThinkerModel> GroupThinkers { get; set; }
     }

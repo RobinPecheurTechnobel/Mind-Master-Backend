@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Models.Enums;
+using BLL.Models.Relations;
 
 namespace BLL.Models
 {
@@ -17,8 +19,6 @@ namespace BLL.Models
         public string Login { get; set; }
         public RoleModel Role { get; set; }
         public string? HashPassword { get; set; }
-
-        public ThinkerModel? Thinker { get; set; }
 
         public string? Email { get; set; }
 

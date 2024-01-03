@@ -1,4 +1,4 @@
-﻿using BLL.Models;
+﻿using BLL.Models.Enums;
 using Mind_Master_Backend.DTOs;
 
 namespace Mind_Master_Backend.Mappers

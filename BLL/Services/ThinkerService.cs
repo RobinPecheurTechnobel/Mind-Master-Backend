@@ -2,6 +2,7 @@
 using BLL.Interfaces;
 using BLL.Mappers;
 using BLL.Models;
+using BLL.Models.Enums;
 using DAL.Entities;
 using DAL.Repositories;
 using Isopoh.Cryptography.Argon2;
