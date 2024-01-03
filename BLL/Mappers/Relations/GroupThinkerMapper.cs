@@ -1,7 +1,7 @@
 ﻿using BLL.Models.Relations;
 using DAL.Entities;
 
-namespace BLL.Mappers
+namespace BLL.Mappers.Relations
 {
     public static class GroupThinkerMapper
     {

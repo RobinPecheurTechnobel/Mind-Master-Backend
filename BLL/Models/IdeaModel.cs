@@ -7,40 +7,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BLL.Models.Enums;
 
 namespace BLL.Models
 {
-    public class IdeaModel
+    public class IdeaModel : IdeaSimpleModel
     {
+        public ThinkerModel Thinker { get; set; }
     }
     public class IdeaSimpleModel
     {
         public int Id { get; set; }
-        public DateTime creationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime LastUpdateDate { get; set; }
-        public string Format
-        {
-            get
-            {
-                return format.ToString();
-            }
-            set
-            {
-                if (!Enum.TryParse<FormatEntity>(value, out FormatEntity result))
-                {
-                    format = 0;
-                }
-                format = result;
-            }
-        }
-        [NotMapped]
-        public FormatEntity format { get; set; }
+        public FormatModel format { get; set; }
 
         public string? Content { get; set; }
         public string? Source { get; set; }
-        [ForeignKey("Thinker")]
         public int ThinkerId { get; set; }
 
-        public virtual ThinkerEntity Thinker { get; set; }
     }
 }

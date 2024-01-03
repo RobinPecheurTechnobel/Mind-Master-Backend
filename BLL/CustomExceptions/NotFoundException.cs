@@ -19,4 +19,8 @@ namespace BLL.CustomExceptions
     {
         public GroupNotFoundException(string message = "Ce groupe n'existe pas") : base(message) { }
     }
+    public class IdeaNotFoundException : NotFoundException
+    {
+        public IdeaNotFoundException(string message = "Cet idée n'existe pas") : base(message) { }
+    }
 }

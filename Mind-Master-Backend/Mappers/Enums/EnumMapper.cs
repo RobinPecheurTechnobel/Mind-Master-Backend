@@ -1,4 +1,4 @@
-﻿namespace Mind_Master_Backend.Mappers
+﻿namespace Mind_Master_Backend.Mappers.Enums
 {
     /// <summary>Class permettant d'ajouter une fonction pour les enums de manière générique</summary>
     /// <typeparam name="T">Forme générique acceptant les enums</typeparam>

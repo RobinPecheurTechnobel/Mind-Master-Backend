@@ -1,7 +1,7 @@
 ﻿using BLL.Models.Enums;
 using DAL.Entities.Enums;
 
-namespace BLL.Mappers
+namespace BLL.Mappers.Enums
 {
     public static class RoleMapper
     {

@@ -1,5 +1,7 @@
 ﻿using BLL.Models;
 using Mind_Master_Backend.DTOs;
+using Mind_Master_Backend.DTOs.Enums;
+using Mind_Master_Backend.Mappers.Enums;
 
 namespace Mind_Master_Backend.Mappers
 {

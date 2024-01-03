@@ -27,6 +27,20 @@ namespace DAL.Repositories
 
             return oldOne;
         }
+        public override IEnumerable<IdeaEntity> GetAll()
+        {
+            return _dbSet.Include(i => i.Thinker);
+        }
+        public override IdeaEntity? GetOneById(int id)
+        {
+            return _dbSet.Include(i => i.Thinker).Where(i => i.Id == id).FirstOrDefault();
+        }
+        public override IdeaEntity? Create(IdeaEntity entity)
+        {
+            _dbSet.Add(entity);
+            SaveChanges();
+            return GetOneById(entity.Id);
+        }
 
         protected override Func<IdeaEntity, bool> PredicateIdentifier(int id)
         {

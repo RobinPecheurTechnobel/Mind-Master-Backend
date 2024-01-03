@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Mind_Master_Backend.DTOs.Enums;
 
 namespace Mind_Master_Backend.DTOs
 {

@@ -1,4 +1,4 @@
-﻿namespace Mind_Master_Backend.DTOs
+﻿namespace Mind_Master_Backend.DTOs.Enums
 {
     /// <summary>Enumeration des roles des comptes</summary>
     public enum RoleDTO

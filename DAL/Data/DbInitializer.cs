@@ -111,7 +111,7 @@ namespace DAL.Data
                     new IdeaEntity
                     {
                         format = FormatEntity.txt,
-                        creationDate = DateTime.Now,
+                        CreationDate = DateTime.Now,
                         LastUpdateDate = DateTime.Now,
                         Source = null,
                         ThinkerId = 1,
@@ -120,7 +120,7 @@ namespace DAL.Data
                     new IdeaEntity
                     {
                         format = FormatEntity.txt,
-                        creationDate = DateTime.Now,
+                        CreationDate = DateTime.Now,
                         LastUpdateDate = DateTime.Now,
                         Source = null,
                         ThinkerId = 1,
@@ -129,7 +129,7 @@ namespace DAL.Data
                     new IdeaEntity
                     {
                         format = FormatEntity.txt,
-                        creationDate = DateTime.Now,
+                        CreationDate = DateTime.Now,
                         LastUpdateDate = DateTime.Now,
                         Source = null,
                         ThinkerId = 2,

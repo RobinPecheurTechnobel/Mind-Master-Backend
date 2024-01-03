@@ -12,7 +12,7 @@ namespace DAL.Entities
         [Key]
         public int Id { get; set; }
         [Required]
-        public DateTime creationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         [Required]
         public DateTime LastUpdateDate { get; set; }
 

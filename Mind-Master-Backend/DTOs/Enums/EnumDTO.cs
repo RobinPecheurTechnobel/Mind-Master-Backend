@@ -1,4 +1,4 @@
-﻿namespace Mind_Master_Backend.DTOs
+﻿namespace Mind_Master_Backend.DTOs.Enums
 {
     /// <summary>Classe universelle pour le transfert d'un enum dans une forme lisible</summary>
     public class EnumDTO

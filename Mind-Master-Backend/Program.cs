@@ -36,11 +36,16 @@ namespace Mind_Master_Backend
             //DAL
             builder.Services.AddScoped<ThinkerRepository>();
             builder.Services.AddScoped<GroupRepository>();
+            builder.Services.AddScoped<LabelRepository>();
+            builder.Services.AddScoped<IdeaRepository>();
+            builder.Services.AddScoped<ConceptRepository>();
+            builder.Services.AddScoped<AssemblyRepository>();
 
             // BLL
             builder.Services.AddScoped<Argon2Service>();
             builder.Services.AddScoped<ThinkerService>();
             builder.Services.AddScoped<GroupService>();
+            builder.Services.AddScoped<IdeaService>();
 
             // API
             builder.Services.AddTransient<TokenService>();
