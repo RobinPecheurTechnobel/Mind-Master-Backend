@@ -47,6 +47,7 @@ namespace Mind_Master_Backend
             builder.Services.AddScoped<GroupService>();
             builder.Services.AddScoped<IdeaService>();
             builder.Services.AddScoped<LabelService>();
+            builder.Services.AddScoped<ConceptService>();
 
             // API
             builder.Services.AddTransient<TokenService>();

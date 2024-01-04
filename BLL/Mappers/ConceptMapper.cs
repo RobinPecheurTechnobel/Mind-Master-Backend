@@ -28,12 +28,12 @@ namespace BLL.Mappers
                 Title = model.Title
             };
         }
-        public static ConceptModel ToModel(this ConceptIdeaEntity entity)
+        public static ConceptModel ToModel(this ConceptEntity entity)
         {
             return new ConceptModel
             {
-                Id = entity.ConceptId,
-                Title = entity.Concept.Title
+                Id = entity.Id,
+                Title = entity.Title
             };
         }
         public static ConceptIdeaModel ToConceptIdeaModel(this ConceptIdeaEntity entity)

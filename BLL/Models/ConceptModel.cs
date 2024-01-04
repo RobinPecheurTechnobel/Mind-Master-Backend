@@ -10,6 +10,13 @@ namespace BLL.Models
 {
     public class ConceptModel :ConceptSimpleModel
     {
+        public ConceptModel(){}
+        public ConceptModel(ConceptSimpleModel simpleModel)
+        {
+            Id = simpleModel.Id;
+            Title = simpleModel.Title;
+            Ideas = null;
+        }
         public IEnumerable<ConceptIdeaModel> Ideas { get; set; }
     }
     public class ConceptSimpleModel

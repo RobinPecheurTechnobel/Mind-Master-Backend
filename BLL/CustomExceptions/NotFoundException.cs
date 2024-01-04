@@ -27,4 +27,8 @@ namespace BLL.CustomExceptions
     {
         public LabelNotFoundException(string message = "Ce tag n'existe pas") : base(message) { }
     }
+    public class ConceptNotFoundException : NotFoundException
+    {
+        public ConceptNotFoundException(string message = "Ce concept n'existe pas") : base(message) { }
+    }
 }
