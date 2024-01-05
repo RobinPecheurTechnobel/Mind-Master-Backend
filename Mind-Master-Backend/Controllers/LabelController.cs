@@ -107,5 +107,101 @@ namespace Mind_Master_Backend.Controllers
                 return BadRequest(exception.Message);
             }
         }
+        [HttpPost("{labelId}/Concept/{conceptId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [ProducesResponseType(404, Type = typeof(string))]
+        public IActionResult LinkLabelToConcept([FromRoute] int labelId, [FromRoute] int conceptId)
+        {
+            try
+            {
+                if (_LabelServices.LinkLabelToConcept(labelId, conceptId)) return NoContent();
+                return BadRequest();
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (BadRequestException bRException)
+            {
+                return NotFound(bRException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+        [HttpPost("{labelId}/Assembly/{assemblyId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [ProducesResponseType(404, Type = typeof(string))]
+        public IActionResult LinkLabelToAssembly([FromRoute] int labelId, [FromRoute] int assemblyId)
+        {
+            try
+            {
+                if (_LabelServices.LinkLabelToAssembly(labelId, assemblyId)) return NoContent();
+                return BadRequest();
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (BadRequestException bRException)
+            {
+                return NotFound(bRException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+        [HttpDelete("{labelId}/Concept/{conceptId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [ProducesResponseType(404, Type = typeof(string))]
+        public IActionResult DetachLabelFromConcept([FromRoute] int labelId, [FromRoute] int conceptId)
+        {
+            try
+            {
+                if (_LabelServices.DetachLabelFromConcept(labelId, conceptId)) return NoContent();
+                return BadRequest();
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (BadRequestException bRException)
+            {
+                return NotFound(bRException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+        [HttpDelete("{labelId}/Assembly/{assemblyId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400, Type = typeof(string))]
+        [ProducesResponseType(404, Type = typeof(string))]
+        public IActionResult DetachFromAssembly([FromRoute] int labelId, [FromRoute] int assemblyId)
+        {
+            try
+            {
+                if (_LabelServices.DetachLabelFromAssembly(labelId, assemblyId)) return NoContent();
+                return BadRequest();
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (BadRequestException bRException)
+            {
+                return NotFound(bRException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
     }
 }

@@ -31,4 +31,8 @@ namespace BLL.CustomExceptions
     {
         public ConceptNotFoundException(string message = "Ce concept n'existe pas") : base(message) { }
     }
+    public class AssemblyNotFoundException : NotFoundException
+    {
+        public AssemblyNotFoundException(string message = "Cet assemblage n'existe pas") : base(message) { }
+    }
 }
