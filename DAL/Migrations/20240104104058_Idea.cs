@@ -46,22 +46,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConceptAssembly",
-                schema: "Idea",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AssemblyId = table.Column<int>(type: "int", nullable: false),
-                    ConceptId = table.Column<int>(type: "int", nullable: false),
-                    Order = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConceptAssembly", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Group",
                 schema: "User",
                 columns: table => new
@@ -77,38 +61,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupAssembly",
-                schema: "Idea",
-                columns: table => new
-                {
-                    AssemblyId = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GroupAssembly", x => new { x.AssemblyId, x.GroupId });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Idea",
-                schema: "Idea",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    creationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Format = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ThinkerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Idea", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Label",
                 schema: "Idea",
                 columns: table => new
@@ -120,19 +72,6 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Label", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LabelAssembly",
-                schema: "Idea",
-                columns: table => new
-                {
-                    LabelId = table.Column<int>(type: "int", nullable: false),
-                    AssemblyId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LabelAssembly", x => new { x.LabelId, x.AssemblyId });
                 });
 
             migrationBuilder.CreateTable(
@@ -151,6 +90,36 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Thinker", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConceptAssembly",
+                schema: "Idea",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AssemblyId = table.Column<int>(type: "int", nullable: false),
+                    ConceptId = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConceptAssembly", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConceptAssembly_Assembly_AssemblyId",
+                        column: x => x.AssemblyId,
+                        principalSchema: "Idea",
+                        principalTable: "Assembly",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConceptAssembly_Concept_ConceptId",
+                        column: x => x.ConceptId,
+                        principalSchema: "Idea",
+                        principalTable: "Concept",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -181,31 +150,55 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConceptIdea",
+                name: "GroupAssembly",
                 schema: "Idea",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ConceptId = table.Column<int>(type: "int", nullable: false),
-                    IdeaId = table.Column<int>(type: "int", nullable: false),
-                    Order = table.Column<long>(type: "bigint", nullable: false)
+                    AssemblyId = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConceptIdea", x => x.Id);
+                    table.PrimaryKey("PK_GroupAssembly", x => new { x.AssemblyId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_ConceptIdea_Concept_ConceptId",
-                        column: x => x.ConceptId,
+                        name: "FK_GroupAssembly_Assembly_AssemblyId",
+                        column: x => x.AssemblyId,
                         principalSchema: "Idea",
-                        principalTable: "Concept",
+                        principalTable: "Assembly",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ConceptIdea_Idea_IdeaId",
-                        column: x => x.IdeaId,
+                        name: "FK_GroupAssembly_Group_GroupId",
+                        column: x => x.GroupId,
+                        principalSchema: "User",
+                        principalTable: "Group",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LabelAssembly",
+                schema: "Idea",
+                columns: table => new
+                {
+                    LabelId = table.Column<int>(type: "int", nullable: false),
+                    AssemblyId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LabelAssembly", x => new { x.LabelId, x.AssemblyId });
+                    table.ForeignKey(
+                        name: "FK_LabelAssembly_Assembly_AssemblyId",
+                        column: x => x.AssemblyId,
                         principalSchema: "Idea",
-                        principalTable: "Idea",
+                        principalTable: "Assembly",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LabelAssembly_Label_LabelId",
+                        column: x => x.LabelId,
+                        principalSchema: "Idea",
+                        principalTable: "Label",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -265,6 +258,74 @@ namespace DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Idea",
+                schema: "Idea",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Format = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ThinkerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Idea", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Idea_Thinker_ThinkerId",
+                        column: x => x.ThinkerId,
+                        principalSchema: "User",
+                        principalTable: "Thinker",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConceptIdea",
+                schema: "Idea",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConceptId = table.Column<int>(type: "int", nullable: false),
+                    IdeaId = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConceptIdea", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConceptIdea_Concept_ConceptId",
+                        column: x => x.ConceptId,
+                        principalSchema: "Idea",
+                        principalTable: "Concept",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConceptIdea_Idea_IdeaId",
+                        column: x => x.IdeaId,
+                        principalSchema: "Idea",
+                        principalTable: "Idea",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConceptAssembly_AssemblyId",
+                schema: "Idea",
+                table: "ConceptAssembly",
+                column: "AssemblyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConceptAssembly_ConceptId",
+                schema: "Idea",
+                table: "ConceptAssembly",
+                column: "ConceptId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_ConceptGroup_GroupId",
                 schema: "Idea",
@@ -284,10 +345,28 @@ namespace DAL.Migrations
                 column: "IdeaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GroupAssembly_GroupId",
+                schema: "Idea",
+                table: "GroupAssembly",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GroupThinker_GroupId",
                 schema: "User",
                 table: "GroupThinker",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Idea_ThinkerId",
+                schema: "Idea",
+                table: "Idea",
+                column: "ThinkerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LabelAssembly_AssemblyId",
+                schema: "Idea",
+                table: "LabelAssembly",
+                column: "AssemblyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LabelConcept_ConceptId",
@@ -299,10 +378,6 @@ namespace DAL.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Assembly",
-                schema: "Idea");
-
             migrationBuilder.DropTable(
                 name: "ConceptAssembly",
                 schema: "Idea");
@@ -340,8 +415,8 @@ namespace DAL.Migrations
                 schema: "User");
 
             migrationBuilder.DropTable(
-                name: "Thinker",
-                schema: "User");
+                name: "Assembly",
+                schema: "Idea");
 
             migrationBuilder.DropTable(
                 name: "Concept",
@@ -350,6 +425,10 @@ namespace DAL.Migrations
             migrationBuilder.DropTable(
                 name: "Label",
                 schema: "Idea");
+
+            migrationBuilder.DropTable(
+                name: "Thinker",
+                schema: "User");
         }
     }
 }

@@ -25,6 +25,8 @@ namespace DAL.Entities.Relations
         public uint Order { get; set; }
 
         public virtual AssemblyEntity Assembly { get; set; }
+        public virtual ConceptEntity Concept { get; set; }
+        [NotMapped]
         public virtual IEnumerable<ConceptIdeaEntity> ConceptIdeas { get; set; }
     }
 }

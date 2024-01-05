@@ -93,7 +93,7 @@ namespace DAL.Repositories
                 .Where(ga => ga.GroupId == groupId)
                 .Select(ga => ga.AssemblyId);
             return _MMContext.ConceptAssemblies
-                .Include(ca => ca.ConceptIdeas)
+                .Include(ca => ca.Concept)
                 .Include(ca => ca.Assembly)
                 .Where(ca => AssmebliesId.Contains(ca.AssemblyId))
                 .Select(ca => ca.Assembly);

@@ -3,17 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mind_Master_Backend.DTOs
 {
-    public class ConceptDTO
+    public class AssemblyDTO
     {
-
         public int Id { get; set; }
         public string Title { get; set; }
-        public IEnumerable<ConceptIdeaDTO> Ideas { get; set; }
+        public IEnumerable<ConceptAssemblyDTO> Concepts { get; set; }
     }
-    public class ConceptDataTO
+    public class AssemblyDataTO
     {
         [Required]
-        [MaxLength(100, ErrorMessage = "Le titre de ce concept ne peut dépasser 100 caractères")]
+        [MaxLength(100, ErrorMessage = "Le titre de cette assemblage ne peut dépasser 100 caractères")]
         public string Title { get; set; }
     }
 }

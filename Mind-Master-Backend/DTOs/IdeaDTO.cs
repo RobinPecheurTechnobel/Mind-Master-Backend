@@ -22,6 +22,7 @@ namespace Mind_Master_Backend.DTOs
         public FormatDTO format { get; set; }
 
         public string? Content { get; set; }
+        [Required]
         public int ThinkerId { get; set; }
     }
 }

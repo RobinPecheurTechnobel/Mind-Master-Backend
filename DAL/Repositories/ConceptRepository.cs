@@ -70,7 +70,7 @@ namespace DAL.Repositories
                 .Include(ci => ci.Concept)
                 .Include(ci => ci.Idea)
                 .Include(ci => ci.Idea.Thinker)
-                .Where(ci => ci.Concept.Title.Contains(title));
+                .Where(ci => ci.Concept.Title.ToLower().Contains(title.ToLower()));
         }
 
         public int InsertIdea(int conceptId, int ideaId, uint index)
@@ -119,7 +119,6 @@ namespace DAL.Repositories
             SaveChanges();
 
             return true;
-            
         }
 
         public bool UpdateIdea(int conceptId, int ideaId, uint index)
@@ -128,11 +127,21 @@ namespace DAL.Repositories
 
             if (cie is null) return false;
 
+            cie.Order = index;
             cie = MoveIdea(cie);
 
             _MMContext.ConceptIdeas.Update(cie);
             SaveChanges();
             return true;
+        }
+
+        public IEnumerable<ConceptIdeaEntity> GetManyIdea(IEnumerable<int> index)
+        {
+            return _MMContext.ConceptIdeas
+                .Include(ci => ci.Concept)
+                .Include(ci => ci.Idea)
+                .Include(ci => ci.Idea.Thinker)
+                .Where(ci => index.Contains(ci.ConceptId));
         }
     }
 }

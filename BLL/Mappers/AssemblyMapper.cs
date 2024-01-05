@@ -1,36 +1,36 @@
 ﻿using BLL.Models;
 using BLL.Models.Relations;
 using DAL.Entities;
-using DAL.Entities.Relations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Mappers
 {
-    public static class ConceptMapper
+    public static class AssemblyMapper
     {
-        public static ConceptSimpleModel ToSimpleModel(this ConceptEntity entity)
+        public static AssemblySimpleModel ToSimpleModel(this AssemblyEntity entity)
         {
-            return new ConceptSimpleModel
+            return new AssemblySimpleModel
             {
                 Id = entity.Id,
                 Title = entity.Title
             };
         }
-        public static ConceptEntity ToEntity(this ConceptSimpleModel model)
+        public static AssemblyEntity ToEntity(this AssemblySimpleModel model)
         {
-            return new ConceptEntity
+            return new AssemblyEntity
             {
                 Id = model.Id,
                 Title = model.Title
             };
         }
-        public static ConceptModel ToModel(this ConceptEntity entity)
+        public static AssemblyModel ToModel(this AssemblyEntity entity)
         {
-            return new ConceptModel
+            return new AssemblyModel
             {
                 Id = entity.Id,
                 Title = entity.Title

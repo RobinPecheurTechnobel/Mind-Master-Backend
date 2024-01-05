@@ -4,6 +4,7 @@ using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(MindMasterContext))]
-    partial class MindMasterContextModelSnapshot : ModelSnapshot
+    [Migration("20240104104058_Idea")]
+    partial class Idea
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,11 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Assembly", "Idea");
@@ -42,6 +50,11 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -98,6 +111,9 @@ namespace DAL.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Format")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -112,10 +128,9 @@ namespace DAL.Migrations
                     b.Property<int>("ThinkerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("creationDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ThinkerId");
 
                     b.ToTable("Idea", "Idea");
                 });
@@ -156,6 +171,10 @@ namespace DAL.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssemblyId");
+
+                    b.HasIndex("ConceptId");
 
                     b.ToTable("ConceptAssembly", "Idea");
                 });
@@ -211,6 +230,8 @@ namespace DAL.Migrations
 
                     b.HasKey("AssemblyId", "GroupId");
 
+                    b.HasIndex("GroupId");
+
                     b.ToTable("GroupAssembly", "Idea");
                 });
 
@@ -223,6 +244,8 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("LabelId", "AssemblyId");
+
+                    b.HasIndex("AssemblyId");
 
                     b.ToTable("LabelAssembly", "Idea");
                 });
@@ -296,6 +319,36 @@ namespace DAL.Migrations
                     b.Navigation("Thinker");
                 });
 
+            modelBuilder.Entity("DAL.Entities.IdeaEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.ThinkerEntity", "Thinker")
+                        .WithMany()
+                        .HasForeignKey("ThinkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Thinker");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Relations.ConceptAssemblyEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.AssemblyEntity", "Assembly")
+                        .WithMany()
+                        .HasForeignKey("AssemblyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.ConceptEntity", "Concept")
+                        .WithMany()
+                        .HasForeignKey("ConceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assembly");
+
+                    b.Navigation("Concept");
+                });
+
             modelBuilder.Entity("DAL.Entities.Relations.ConceptGroupEntity", b =>
                 {
                     b.HasOne("DAL.Entities.ConceptEntity", "Concept")
@@ -332,6 +385,44 @@ namespace DAL.Migrations
                     b.Navigation("Concept");
 
                     b.Navigation("Idea");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Relations.GroupAssemblyEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.AssemblyEntity", "Assembly")
+                        .WithMany()
+                        .HasForeignKey("AssemblyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.GroupEntity", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assembly");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Relations.LabelAssemblyEntity", b =>
+                {
+                    b.HasOne("DAL.Entities.AssemblyEntity", "Assembly")
+                        .WithMany()
+                        .HasForeignKey("AssemblyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.LabelEntity", "Label")
+                        .WithMany()
+                        .HasForeignKey("LabelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assembly");
+
+                    b.Navigation("Label");
                 });
 
             modelBuilder.Entity("DAL.Entities.Relations.LabelConceptEntity", b =>

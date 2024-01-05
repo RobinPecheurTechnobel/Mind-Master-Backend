@@ -22,7 +22,7 @@ namespace BLL.Mappers
                 format = entity.format.ToModel(),
                 LastUpdateDate = entity.LastUpdateDate,
                 Source = entity.Source,
-                Thinker = entity.Thinker.ToModel(),
+                Thinker = entity.Thinker is null ? null : entity.Thinker.ToModel(),
                 ThinkerId = entity.ThinkerId
             };
         }

@@ -2,6 +2,7 @@
 using DAL.Entities;
 using DAL.Entities.Relations;
 using DAL.Interfaces;
+using DAL.Migrations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -35,31 +36,113 @@ namespace DAL.Repositories
         }
         public IEnumerable<ConceptAssemblyEntity> GetConcepts(int AssemblyId)
         {
-            return _MMContext.ConceptAssemblies
+            IEnumerable<ConceptAssemblyEntity>  all =
+                _MMContext.ConceptAssemblies
                 .Include(ca => ca.Assembly)
-                .Include(ca => ca.ConceptIdeas)
+                .Include(ca => ca.Concept)
+                .GroupJoin(_MMContext.ConceptIdeas.Include(ci => ci.Concept).Include(ci => ci.Idea),
+                    ca => ca.ConceptId,
+                    ci => ci.ConceptId,
+                    (ca, ci) => new
+                    {
+                        ca.Id,
+                        ca.ConceptId,
+                        ca.Concept,
+                        ca.Order,
+                        ca.Assembly,
+                        ca.AssemblyId,
+                        ci
+                    })
+                .Select(c => new ConceptAssemblyEntity
+                {
+                    Id = c.Id,
+                    ConceptId = c.ConceptId,
+                    Concept = c.Concept,
+                    Assembly = c.Assembly,
+                    AssemblyId = c.AssemblyId,
+                    Order = c.Order,
+                    ConceptIdeas = c.ci
+                })
                 .Where(ca => ca.AssemblyId == AssemblyId);
+            return all;
         }
         //TODO a tester
-        public IEnumerable<ConceptAssemblyEntity> GetAssemblyByLabel(int LabelId)
+        public IEnumerable<AssemblyEntity> GetAssemblyByLabel(int LabelId)
         {
-
             IEnumerable<int> AssembliesId = _MMContext.LabelAssemblies
                 .Include(la => la.Assembly)
                 .Include(la => la.Label)
                 .Where(la => la.LabelId == LabelId)
                 .Select(la => la.AssemblyId);
-            return _MMContext.ConceptAssemblies
-                .Include(ca => ca.Assembly)
-                .Include(ca => ca.ConceptIdeas)
-                .Where(ca => AssembliesId.Contains(ca.AssemblyId));
+            return _MMContext.Assemblies
+                .Where(a => AssembliesId.Contains(a.Id));
         }
-        public IEnumerable<ConceptAssemblyEntity> GetByTitle(string title)
+        public IEnumerable<AssemblyEntity> GetByTitle(string title)
         {
-            return _MMContext.ConceptAssemblies
-                .Include(ca => ca.Assembly)
-                .Include(ca => ca.ConceptIdeas)
-                .Where(ca => ca.Assembly.Title.Contains(title));
+            return _MMContext.Assemblies
+                .Where(a => a.Title.ToLower().Contains(title.ToLower()));
+        }
+
+        public int InsertConcept(int assemblyId, int conceptId, uint index)
+        {
+            ConceptAssemblyEntity cae = new ConceptAssemblyEntity
+            {
+                AssemblyId = assemblyId,
+                ConceptId = conceptId,
+                Order = index
+            };
+            cae = MoveIdea(cae);
+
+            _MMContext.ConceptAssemblies.Add(cae);
+            SaveChanges();
+            return cae.ConceptId;
+        }
+
+        public bool RemoveConcept(int assemblyId, int conceptId)
+        {
+            ConceptAssemblyEntity? cae = _MMContext.ConceptAssemblies.Where(ca => ca.ConceptId == conceptId && ca.AssemblyId == assemblyId).FirstOrDefault();
+
+            if (cae is null) return false;
+
+            _MMContext.ConceptAssemblies.Remove(cae);
+            SaveChanges();
+
+            return true;
+        }
+
+        public bool UpdateConcept(int assemblyId, int conceptId, uint index)
+        {
+            ConceptAssemblyEntity? cae = _MMContext.ConceptAssemblies.Where(ca => ca.ConceptId == conceptId && ca.AssemblyId == assemblyId).FirstOrDefault();
+
+            if (cae is null) return false;
+
+            cae.Order = index;
+            cae = MoveIdea(cae);
+
+            _MMContext.ConceptAssemblies.Update(cae);
+            SaveChanges();
+            return true;
+        }
+        private ConceptAssemblyEntity MoveIdea(ConceptAssemblyEntity conceptAssembly)
+        {
+
+            IEnumerable<ConceptAssemblyEntity> caes = GetConcepts(conceptAssembly.ConceptId);
+
+            uint max = caes.Select(cae => cae.Order).Max();
+
+            if (conceptAssembly.Order > max + 1) conceptAssembly.Order = max + 1;
+            else if (caes.Where(cie => cie.Order == conceptAssembly.Order).FirstOrDefault() is not null)
+            {
+                IEnumerable<ConceptAssemblyEntity> caesToMove = caes.Where(cae => cae.Order >= conceptAssembly.Order);
+                foreach (ConceptAssemblyEntity cae in caesToMove)
+                {
+                    cae.Order = cae.Order + 1;
+                    _MMContext.Update(cae);
+                }
+                SaveChanges();
+            }
+
+            return conceptAssembly;
         }
     }
 }
