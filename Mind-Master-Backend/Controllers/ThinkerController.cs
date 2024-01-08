@@ -47,7 +47,7 @@ namespace Mind_Master_Backend.Controllers
             IEnumerable<ThinkerDTO> result = _ThinkerService.GetAll().Select(a => a.ToDTO());
             return Ok(result);
         }
-
+        
         /// <summary>EndPoint donnant la liste des roles avec leur clé</summary>
         /// <returns>
         ///     Un IActionResult donnant les réponses suivantes :
@@ -139,6 +139,15 @@ namespace Mind_Master_Backend.Controllers
             {
                 return BadRequest(exception.Message);
             }
+        }
+
+
+        [HttpGet("search/{information}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ThinkerDTO>))]
+        public IActionResult GetByInformation(string information)
+        {
+            IEnumerable<ThinkerDTO> result = _ThinkerService.GetByInformation(information).Select(a => a.ToDTO());
+            return Ok(result);
         }
 
         /// <summary>EndPoint pour modifier un compte spécifique</summary>

@@ -7,7 +7,7 @@ namespace DAL.Data
     public class MindMasterContext : DbContext
     {
         public MindMasterContext(DbContextOptions options) : base(options) {
-            //DbInitializer.Initialize(this);
+            DbInitializer.Initialize(this);
         }
 
         public DbSet<ThinkerEntity> Thinkers { get; set; }

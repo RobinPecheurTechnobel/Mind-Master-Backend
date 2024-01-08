@@ -138,5 +138,10 @@ namespace BLL.Services
                 throw new Exception(exception.Message);
             }
         }
+
+        public IEnumerable<ThinkerModel> GetByInformation(string information)
+        {
+            return ((ThinkerRepository)_repository).GetByInformation(information).Select(t => t.ToModel());
+        }
     }
 }

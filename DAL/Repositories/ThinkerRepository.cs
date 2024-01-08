@@ -85,5 +85,10 @@ namespace DAL.Repositories
                 .Where(gt => gt.ThinkerId == id);
             return groups;
         }
+
+        public IEnumerable<ThinkerEntity> GetByInformation(string information)
+        {
+            return _dbSet.Where(t => t.Pseudo.ToLower().Contains(information) || t.Email.ToLower().Contains(information));
+        }
     }
 }
