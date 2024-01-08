@@ -144,5 +144,14 @@ namespace DAL.Repositories
 
             return conceptAssembly;
         }
+
+        public IEnumerable<AssemblyEntity> GetAssemblyForThisGroup(int groupId)
+        {
+            return _MMContext.GroupAssemblies
+                .Include(ga => ga.Group)
+                .Include(a => a.Assembly)
+                .Where(ga => ga.GroupId == groupId)
+                .Select(ga => ga.Assembly);
+        }
     }
 }

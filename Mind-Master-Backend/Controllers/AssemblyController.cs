@@ -205,5 +205,25 @@ namespace Mind_Master_Backend.Controllers
                 return BadRequest(exception.Message);
             }
         }
+        [HttpGet("Group/{groupId}")]
+        [ActionName("GetAllForThisGroup")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<AssemblyDTO>))]
+        [ProducesResponseType(404, Type = typeof(string))]
+        public IActionResult GetAllForThisGroup([FromRoute] int groupId)
+        {
+            try
+            {
+                return Ok(_AssemblyServices.GetAllForThisGroup(groupId).Select(c => c.ToDTO()));
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
     }
 }

@@ -8,6 +8,7 @@ using DAL.Entities;
 using DAL.Entities.Relations;
 using DAL.Migrations;
 using DAL.Repositories;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
@@ -23,11 +24,16 @@ namespace BLL.Services
     {
         private ConceptRepository _ConceptRepository;
         private ConceptService _ConceptService;
-        public AssemblyService(AssemblyRepository assemblyRepository, ConceptRepository conceptRepository, ConceptService conceptService)
+        private GroupService _GroupService;
+        public AssemblyService(AssemblyRepository assemblyRepository, 
+            ConceptRepository conceptRepository, 
+            ConceptService conceptService,
+            GroupService groupService)
         {
             _repository = assemblyRepository;
             _ConceptRepository = conceptRepository;
             _ConceptService = conceptService;
+            _GroupService = groupService;
         }
 
         public override void IdUsed(int id)
@@ -95,6 +101,16 @@ namespace BLL.Services
             uint index = (uint)Math.Abs(order);
 
             return ((AssemblyRepository)_repository).UpdateConcept(assemblyId, conceptId, index);
+        }
+
+        public IEnumerable<AssemblyModel> GetAllForThisGroup(int groupId)
+        {
+            _GroupService.IdUsed(groupId);
+
+            return ((AssemblyRepository)_repository).GetAssemblyForThisGroup(groupId).Select(a => a.ToModel());
+
+
+             
         }
     }
 }
