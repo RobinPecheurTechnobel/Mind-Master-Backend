@@ -41,7 +41,7 @@ namespace BLL.Services
 
                 GroupSimpleModel privateGroup = new GroupSimpleModel {
                     Name = $"Espace de {result.Pseudo}",
-                    Description = null
+                    Description = $"Espace personnel de {result.Pseudo}"
                 };
                 int privateId = _groupRepository.Create(privateGroup.ToEntiTy())!.Id;
 
