@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace DAL.Repositories
 {
@@ -97,6 +98,21 @@ namespace DAL.Repositories
                 .Include(ca => ca.Assembly)
                 .Where(ca => AssmebliesId.Contains(ca.AssemblyId))
                 .Select(ca => ca.Assembly);
+        }
+
+        public bool UpdateThinkerToGroup(int groupId, int thinkerId, JsonPatchDocument<GroupThinkerEntity> patch)
+        {
+            GroupThinkerEntity? entityExist = _MMContext.GroupThinkers
+                .Where(gt => gt.GroupId==groupId && gt.ThinkerId==thinkerId)
+                .FirstOrDefault();
+
+            if (entityExist is null) return false;
+
+            patch.ApplyTo(entityExist);
+
+            _MMContext.GroupThinkers.Update(entityExist);
+            SaveChanges();
+            return true;
         }
     }
 }

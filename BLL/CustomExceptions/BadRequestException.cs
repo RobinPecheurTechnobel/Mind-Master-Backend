@@ -31,4 +31,8 @@ namespace BLL.CustomExceptions
     {
         public LabelAssemblyNotLinkedException(string Message = "Ce tag et cet assemblage ne sont pas associés") : base(Message) { }
     }
+    public class UnAuthorizedPatchOperation : BadRequestException
+    {
+        public UnAuthorizedPatchOperation(string Message = "Ce champs ne peut-être modifier de cette façon") : base(Message) { }
+    }
 }

@@ -6,6 +6,7 @@ using BLL.Models;
 using BLL.Models.Relations;
 using DAL.Entities;
 using DAL.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace BLL.Services
 {
@@ -59,7 +60,22 @@ namespace BLL.Services
 
         public int AddThinkerToGroup(int groupId, int thinkerId)
         {
-            return ((GroupRepository)_repository).AddThinkerToGroup(groupId,thinkerId);
+            try
+            {
+                IdUsed(groupId);
+                _thinkerService.IdUsed(thinkerId);
+                return ((GroupRepository)_repository).AddThinkerToGroup(groupId, thinkerId);
+            }
+            catch (NotFoundException nFException)
+            {
+                throw new Exception(nFException.Message);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+
+            
         }
 
         public bool RemoveThinkerToGroup(int groupId, int thinkerId)
@@ -75,6 +91,26 @@ namespace BLL.Services
                 throw new Exception(nFException.Message);
             }
             catch(Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
+        public bool UpdateThinkerToGroup(int groupId, int thinkerId, JsonPatchDocument<GroupThinkerModel> patch)
+        {
+            try
+            {
+                IdUsed(groupId);
+                _thinkerService.IdUsed(thinkerId);
+
+                if (patch is null) throw new UnAuthorizedPatchOperation();
+
+                return ((GroupRepository)_repository).UpdateThinkerToGroup(groupId, thinkerId, patch.ToJsonPatchDocumentEntity());
+            }
+            catch (NotFoundException nFException)
+            {
+                throw new Exception(nFException.Message);
+            }
+            catch (Exception exception)
             {
                 throw new Exception(exception.Message);
             }

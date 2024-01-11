@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mind_Master_Backend.DTOs;
 using Mind_Master_Backend.Mappers;
+using Microsoft.AspNetCore.JsonPatch;
+using BLL.Models.Relations;
 
 namespace Mind_Master_Backend.Controllers
 {
@@ -159,6 +161,35 @@ namespace Mind_Master_Backend.Controllers
                 return BadRequest(exception.Message);
             }
         }
+        //TODO here utiliser ce endpoint en frontend
+        [HttpPatch("{groupId}/Thinker/{thinkerId}")]
+        [ProducesResponseType(204, Type = typeof(int))]
+        [ProducesResponseType(404, Type = typeof(IEnumerable<string>))]
+        public IActionResult UpdateThinkerToGroup([FromRoute] int groupId, [FromRoute] int thinkerId, [FromBody] JsonPatchDocument<GroupThinkerInGroupDTO> patch)
+        {
+            //[{
+            //    "op":"add",
+            //    "path":"/isOwner",
+            //    "value":"true"
+            //}]
+            try
+            {
+                if (patch is null) throw new BadRequestException("Aucune opération n'a été reçue");
+                //GroupThinkerInGroupDTO gt = new GroupThinkerInGroupDTO();
+                //patch.ApplyTo(gt);
 
+                //if (_GroupService.UpdateThinkerToGroup(groupId, thinkerId, gt.isOwner)) return NoContent();
+                if (_GroupService.UpdateThinkerToGroup(groupId, thinkerId, patch.ToJsonPatchDocumentModel())) return NoContent();
+                return NotFound();
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
     }
 }

@@ -4,13 +4,17 @@ using DAL.Data;
 using DAL.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Mind_Master_Backend.Services;
 using System.Data.Common;
 using System.Text;
+using Mind_Master_Backend.Config;
 
 namespace Mind_Master_Backend
 {
@@ -52,7 +56,10 @@ namespace Mind_Master_Backend
 
             // API
             builder.Services.AddTransient<TokenService>();
-
+            builder.Services.AddControllers(options =>
+            {
+                options.InputFormatters.Insert(0, MyJsonPatchInputFormatter.GetJsonPatchInputFormatter());
+            });
 
             // Add JWT config
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
