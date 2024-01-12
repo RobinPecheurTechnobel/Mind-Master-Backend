@@ -84,6 +84,9 @@ namespace BLL.Services
             {
                 IdUsed(groupId);
                 _thinkerService.IdUsed(thinkerId);
+
+                IsThenGroupWithoutOwner(groupId, thinkerId);
+
                 return ((GroupRepository)_repository).RemoveThinkerToGroup(groupId, thinkerId);
             }
             catch(NotFoundException nFException)
@@ -95,6 +98,7 @@ namespace BLL.Services
                 throw new Exception(exception.Message);
             }
         }
+
         public bool UpdateThinkerToGroup(int groupId, int thinkerId, JsonPatchDocument<GroupThinkerModel> patch)
         {
             try
@@ -103,6 +107,9 @@ namespace BLL.Services
                 _thinkerService.IdUsed(thinkerId);
 
                 if (patch is null) throw new UnAuthorizedPatchOperation();
+
+                if(patch.Operations.Where(o => o.path == "/isOwner").Count() > 0)
+                    IsThenGroupWithoutOwner(groupId, thinkerId);
 
                 return ((GroupRepository)_repository).UpdateThinkerToGroup(groupId, thinkerId, patch.ToJsonPatchDocumentEntity());
             }
@@ -114,6 +121,12 @@ namespace BLL.Services
             {
                 throw new Exception(exception.Message);
             }
+        }
+
+        private void IsThenGroupWithoutOwner(int groupId, int thinkerId)
+        {
+            if (getThinkers(groupId).Where(gt => gt.isOwner && gt.Thinker.Id != thinkerId).Count() < 1)
+                throw new GroupWithoutOwnerException();
         }
     }
 }

@@ -35,4 +35,8 @@ namespace BLL.CustomExceptions
     {
         public UnAuthorizedPatchOperation(string Message = "Ce champs ne peut-être modifier de cette façon") : base(Message) { }
     }
+    public class GroupWithoutOwnerException : BadRequestException
+    {
+        public GroupWithoutOwnerException(string Message = "Ce groupe doit toujours avoir un propriétaire") : base(Message) { }
+    }
 }
