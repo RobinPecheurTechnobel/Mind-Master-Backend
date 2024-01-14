@@ -8,8 +8,10 @@ using DAL.Entities;
 using DAL.Repositories;
 using Isopoh.Cryptography.Argon2;
 using Isopoh.Cryptography.SecureArray;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BLL.Services
 {
@@ -142,6 +144,36 @@ namespace BLL.Services
         public IEnumerable<ThinkerModel> GetByInformation(string information)
         {
             return ((ThinkerRepository)_repository).GetByInformation(information).Select(t => t.ToModel());
+        }
+
+        public bool Edit(int thinkerId, JsonPatchDocument<ThinkerModel> patch)
+        {
+            try
+            {
+                IdUsed(thinkerId);
+
+                if (patch is null) throw new UnAuthorizedPatchOperation();
+
+                ThinkerModel one = GetOneById(thinkerId);
+                patch.ApplyTo(one);
+
+                int groupId = _groupRepository.GetPrivate(thinkerId);
+                GroupModel group = _groupRepository.GetOneById(groupId).ToModel();
+                group.Name = "Espace de " + one.Pseudo;
+                _groupRepository.Update(groupId, group.ToEntiTy());
+
+
+
+                return ((ThinkerRepository)_repository).Update(thinkerId,one.ToEntity());
+            }
+            catch (NotFoundException nFException)
+            {
+                throw new Exception(nFException.Message);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
         }
     }
 }

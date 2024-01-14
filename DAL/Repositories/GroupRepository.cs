@@ -114,5 +114,14 @@ namespace DAL.Repositories
             SaveChanges();
             return true;
         }
+
+        public int GetPrivate(int thinkerId)
+        {
+            return _MMContext.GroupThinkers.Include(gt => gt.Group)
+                                           .Include(gt => gt.Thinker)
+                                           .Where(gt => gt.Thinker.Id == thinkerId && !gt.isOwner && gt.Group.Name.Contains("Espace de "))
+                                           .First()
+                                           .GroupId;
+        }
     }
 }

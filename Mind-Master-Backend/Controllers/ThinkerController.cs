@@ -4,6 +4,7 @@ using Isopoh.Cryptography.Argon2;
 using Isopoh.Cryptography.SecureArray;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Mind_Master_Backend.DTOs;
 using Mind_Master_Backend.DTOs.Enums;
@@ -221,6 +222,31 @@ namespace Mind_Master_Backend.Controllers
             try
             {
                 if(_ThinkerService.Delete(id)) return NoContent();
+                return NotFound();
+
+            }
+            catch (DataConstraintException dataException)
+            {
+                return BadRequest(dataException.Message);
+            }
+            catch (NotFoundException nFException)
+            {
+                return NotFound(nFException.Message);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
+        }
+
+        [HttpPatch("{thinkerId}")]
+        public IActionResult Edit([FromRoute] int thinkerId, [FromBody] JsonPatchDocument<ThinkerDTO> patch)
+        {
+            try
+            {
+                if (patch is null) throw new BadRequestException("Aucune opération n'a été reçue");
+
+                if (_ThinkerService.Edit(thinkerId, patch.ToJsonPatchDocumentModel())) return NoContent();
                 return NotFound();
 
             }

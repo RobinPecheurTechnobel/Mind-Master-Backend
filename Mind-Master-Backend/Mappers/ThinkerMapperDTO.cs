@@ -1,4 +1,7 @@
 ﻿using BLL.Models;
+using BLL.Models.Relations;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Mind_Master_Backend.DTOs;
 using Mind_Master_Backend.DTOs.Enums;
 using Mind_Master_Backend.Mappers.Enums;
@@ -72,6 +75,26 @@ namespace Mind_Master_Backend.Mappers
                 Pseudo = model.Pseudo,
                 Role = new EnumDTO(model.Role.ToDTO()),
                 Groups = model.GroupThinkers.Select(gt => gt.ToInternalGroupDTO())
+            };
+        }
+
+        public static JsonPatchDocument<ThinkerModel> ToJsonPatchDocumentModel(this JsonPatchDocument<ThinkerDTO> jpd)
+        {
+            if (jpd.Operations is null || jpd.Operations.Where(op => op is not null).Count() < 1) return null;
+            return new JsonPatchDocument<ThinkerModel>(
+                new List<Operation<ThinkerModel>>(jpd.Operations.Select(op => op.ToOperationModel())),
+                jpd.ContractResolver);
+        }
+        public static Operation<ThinkerModel> ToOperationModel(this Operation<ThinkerDTO> o)
+        {
+            List<string> pathAutorized = new List<string> { "Pseudo", "Email" };
+            if (pathAutorized.Where(path => o.path.Contains(path)).Count() < 1) return null;
+            return new Operation<ThinkerModel>
+            {
+                from = o.from,
+                op = o.op,
+                path = o.path,
+                value = o.value
             };
         }
     }
