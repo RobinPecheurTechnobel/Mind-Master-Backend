@@ -6,6 +6,7 @@ using Mind_Master_Backend.DTOs;
 using Mind_Master_Backend.Mappers;
 using Microsoft.AspNetCore.JsonPatch;
 using BLL.Models.Relations;
+using Mind_Master_Backend.Services;
 
 namespace Mind_Master_Backend.Controllers
 {
@@ -14,10 +15,12 @@ namespace Mind_Master_Backend.Controllers
     public class GroupController : ControllerBase
     {
         private GroupService _GroupService;
+        private TokenService _TokenService;
 
-        public GroupController(GroupService groupeService)
+        public GroupController(GroupService groupeService, TokenService tokenService)
         {
             _GroupService = groupeService;
+            _TokenService = tokenService;
         }
 
 
@@ -46,11 +49,14 @@ namespace Mind_Master_Backend.Controllers
 
         [HttpPost]
         [ProducesResponseType(201,Type = typeof(int))]
-        public IActionResult Create([FromBody] GroupDataToObject group)
+        public IActionResult Create([FromBody] GroupDataToObject group, [FromHeader] string Authorization)
         {
             try
             {
                 int id = _GroupService.Create(group.ToNewModel()).Id;
+
+                _GroupService.AddThinkerToGroup(id, _TokenService.GetIdFromToken(Authorization.Replace("Bearer ", "")), true);
+
                 return CreatedAtAction(nameof(GroupController.GetOneById), new { groupId = id }, new { id });
             }
             catch(Exception exception)

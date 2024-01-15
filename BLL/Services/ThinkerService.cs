@@ -47,8 +47,8 @@ namespace BLL.Services
                 };
                 int privateId = _groupRepository.Create(privateGroup.ToEntiTy())!.Id;
 
-                _groupRepository.AddThinkerToGroup(1, result.Id);
-                _groupRepository.AddThinkerToGroup(privateId, result.Id);
+                _groupRepository.AddThinkerToGroup(1, result.Id,false);
+                _groupRepository.AddThinkerToGroup(privateId, result.Id,false);
 
                 return result;
             }

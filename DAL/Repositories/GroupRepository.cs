@@ -45,12 +45,13 @@ namespace DAL.Repositories
                 .Where(gt => gt.GroupId == id);
         }
 
-        public int AddThinkerToGroup(int groupId, int thinkerId)
+        public int AddThinkerToGroup(int groupId, int thinkerId, bool isOwner)
         {
             GroupThinkerEntity gtentity = new GroupThinkerEntity
             {
                 GroupId = groupId,
-                ThinkerId = thinkerId
+                ThinkerId = thinkerId,
+                isOwner = isOwner
             };
             _MMContext.GroupThinkers.Add(gtentity);
             SaveChanges();

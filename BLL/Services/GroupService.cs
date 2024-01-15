@@ -7,6 +7,7 @@ using BLL.Models.Relations;
 using DAL.Entities;
 using DAL.Repositories;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Globalization;
 
 namespace BLL.Services
 {
@@ -62,9 +63,7 @@ namespace BLL.Services
         {
             try
             {
-                IdUsed(groupId);
-                _thinkerService.IdUsed(thinkerId);
-                return ((GroupRepository)_repository).AddThinkerToGroup(groupId, thinkerId);
+                return AddThinkerToGroup(groupId, thinkerId, false);
             }
             catch (NotFoundException nFException)
             {
@@ -75,7 +74,23 @@ namespace BLL.Services
                 throw new Exception(exception.Message);
             }
 
-            
+        }
+        public int AddThinkerToGroup(int groupId, int thinkerId, bool isowner)
+        {
+            try
+            {
+                IdUsed(groupId);
+                _thinkerService.IdUsed(thinkerId);
+                return ((GroupRepository)_repository).AddThinkerToGroup(groupId, thinkerId, true);
+            }
+            catch (NotFoundException nFException)
+            {
+                throw new Exception(nFException.Message);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
         }
 
         public bool RemoveThinkerToGroup(int groupId, int thinkerId)
