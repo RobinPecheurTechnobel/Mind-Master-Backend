@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mind_Master_Backend.DTOs;
 using Mind_Master_Backend.Mappers;
+using Mind_Master_Backend.Services;
 using System.Runtime.Serialization;
 
 namespace Mind_Master_Backend.Controllers
@@ -12,18 +13,20 @@ namespace Mind_Master_Backend.Controllers
     [ApiController]
     public class AssemblyController : ControllerBase
     {
-        private AssemblyService _AssemblyServices;
+        private AssemblyService _AssemblyService;
+        private TokenService _TokenService;
 
-        public AssemblyController(AssemblyService assemblyServices)
+        public AssemblyController(AssemblyService assemblyService,
+            TokenService tokenService)
         {
-            _AssemblyServices = assemblyServices;
+            _AssemblyService = assemblyService;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AssemblyDTO>))]
         public IActionResult GetAll()
         {
-            IEnumerable<AssemblyDTO> result = _AssemblyServices.GetAll().Select(a => a.ToDTO());
+            IEnumerable<AssemblyDTO> result = _AssemblyService.GetAll().Select(a => a.ToDTO());
             return Ok(result);
         }
         [HttpGet("{assemblyId}")]
@@ -34,7 +37,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                return Ok(_AssemblyServices.GetOneById(assemblyId).ToDTO());
+                return Ok(_AssemblyService.GetOneById(assemblyId).ToDTO());
             }
             catch (NotFoundException nFException)
             {
@@ -53,7 +56,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                return Ok(_AssemblyServices.GetByTitle(title).Select(c => c.ToDTO()));
+                return Ok(_AssemblyService.GetByTitle(title).Select(c => c.ToDTO()));
             }
             catch (NotFoundException nFException)
             {
@@ -73,7 +76,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                return Ok(_AssemblyServices.GetByLabel(labelId).Select(c => c.ToDTO()));
+                return Ok(_AssemblyService.GetByLabel(labelId).Select(c => c.ToDTO()));
             }
             catch (NotFoundException nFException)
             {
@@ -91,7 +94,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                if (_AssemblyServices.Delete(id)) return NoContent();
+                if (_AssemblyService.Delete(id)) return NoContent();
                 return NotFound();
 
             }
@@ -112,10 +115,18 @@ namespace Mind_Master_Backend.Controllers
         [ProducesResponseType(201, Type = typeof(int))]
         public IActionResult Create([FromBody] AssemblyDataTO assembly)
         {
+            return this.CreateToAGroup(assembly, 1);
+        }
+        [HttpPost("{groupId}")]
+        [ProducesResponseType(201, Type = typeof(int))]
+        public IActionResult CreateToAGroup([FromBody] AssemblyDataTO assembly, [FromRoute] int groupId)
+        {
             try
             {
-                int id = _AssemblyServices.Create(assembly.ToModel()).Id;
-                return CreatedAtAction(nameof(LabelController.GetOneById), new { labelId = id }, new { id });
+                int id = ((AssemblyService)_AssemblyService).CreateAssembly(assembly.ToModel(),
+                    groupId
+                    ).Id;
+                return CreatedAtAction(nameof(AssemblyController.GetOneById), new { assemblyId = id }, new { id });
             }
             catch (Exception exception)
             {
@@ -130,7 +141,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                _AssemblyServices.Update(id, DataTo.ToModel());
+                _AssemblyService.Update(id, DataTo.ToModel());
                 return NoContent();
             }
             catch (DataConstraintException dataException)
@@ -152,7 +163,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                int id = _AssemblyServices.InsertConcept(assemblyId, conceptId, order);
+                int id = _AssemblyService.InsertConcept(assemblyId, conceptId, order);
                 return CreatedAtAction(nameof(LabelController.GetOneById), new { assemblyId = id }, new { id });
             }
             catch (Exception exception)
@@ -166,7 +177,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                if (_AssemblyServices.RemoveConcept(assemblyId, ConceptId)) return NoContent();
+                if (_AssemblyService.RemoveConcept(assemblyId, ConceptId)) return NoContent();
                 return NotFound();
 
             }
@@ -189,7 +200,7 @@ namespace Mind_Master_Backend.Controllers
         {
             try
             {
-                if (_AssemblyServices.MoveConcept(AssemblyId, ConceptId, order)) return NoContent();
+                if (_AssemblyService.MoveConcept(AssemblyId, ConceptId, order)) return NoContent();
                 return NotFound();
 
             }
@@ -215,8 +226,8 @@ namespace Mind_Master_Backend.Controllers
             try
             {
                 if (withThis is null || withThis.Replace(" ","") == "")
-                    return Ok(_AssemblyServices.GetAllForThisGroup(groupId).Select(c => c.ToDTO()));
-                return Ok(_AssemblyServices.GetAllForThisGroupWithCriteria(groupId, withThis).Select(c => c.ToDTO()));
+                    return Ok(_AssemblyService.GetAllForThisGroup(groupId).Select(c => c.ToDTO()));
+                return Ok(_AssemblyService.GetAllForThisGroupWithCriteria(groupId, withThis).Select(c => c.ToDTO()));
             }
             catch (NotFoundException nFException)
             {

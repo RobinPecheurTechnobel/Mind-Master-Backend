@@ -54,13 +54,14 @@ namespace BLL.Services
 
         public override AssemblyModel GetOneById(int id)
         {
+            IdUsed(id);
+
             IEnumerable<ConceptAssemblyEntity> conceptAssemblies = ((AssemblyRepository)_repository).GetConcepts(id);
             
-            if (conceptAssemblies is null || conceptAssemblies.Count() < 1) throw new AssemblyNotFoundException();
+            AssemblyModel model = _repository.GetOneById(id).ToModel();
 
-            AssemblyModel model = conceptAssemblies.First().Assembly.ToModel();
-            
-            model.Concepts = conceptAssemblies.Select(ca =>ca.ToConceptAssmblyModel());
+            if (conceptAssemblies is  not null && conceptAssemblies.Count() > 0)
+                model.Concepts = conceptAssemblies.Select(ca =>ca.ToConceptAssmblyModel());
 
             return model;
         }
@@ -115,6 +116,15 @@ namespace BLL.Services
             _GroupService.IdUsed(groupId);
 
             return ((AssemblyRepository)_repository).GetAssemblyForThisGroupWithCriteria(groupId, withThis).Select(a => a.ToModel());
+        }
+
+        public AssemblyModel CreateAssembly(AssemblyModel assemblyModel, int groupId = 1)
+        {
+            AssemblyModel model = Create(assemblyModel);
+
+            ((AssemblyRepository)_repository).AssociateGroupAssembly(model.Id, groupId);
+
+            return model;
         }
     }
 }

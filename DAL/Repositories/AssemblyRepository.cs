@@ -178,5 +178,17 @@ namespace DAL.Repositories
                 )
                 .Select(ga => ga.assembly);
         }
+        public GroupAssemblyEntity AssociateGroupAssembly(int assemblyId, int groupId)
+        {
+            GroupAssemblyEntity gae = new GroupAssemblyEntity
+            {
+                AssemblyId = assemblyId,
+                GroupId = groupId
+            };
+            _MMContext.GroupAssemblies.Add(gae);
+            SaveChanges();
+
+            return gae;
+        }
     }
 }
