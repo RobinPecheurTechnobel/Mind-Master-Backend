@@ -108,9 +108,13 @@ namespace BLL.Services
             _GroupService.IdUsed(groupId);
 
             return ((AssemblyRepository)_repository).GetAssemblyForThisGroup(groupId).Select(a => a.ToModel());
+        }
 
+        public IEnumerable<AssemblyModel> GetAllForThisGroupWithCriteria(int groupId, string withThis)
+        {
+            _GroupService.IdUsed(groupId);
 
-             
+            return ((AssemblyRepository)_repository).GetAssemblyForThisGroupWithCriteria(groupId, withThis).Select(a => a.ToModel());
         }
     }
 }

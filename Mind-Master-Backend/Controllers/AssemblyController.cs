@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mind_Master_Backend.DTOs;
 using Mind_Master_Backend.Mappers;
+using System.Runtime.Serialization;
 
 namespace Mind_Master_Backend.Controllers
 {
@@ -209,11 +210,13 @@ namespace Mind_Master_Backend.Controllers
         [ActionName("GetAllForThisGroup")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AssemblyDTO>))]
         [ProducesResponseType(404, Type = typeof(string))]
-        public IActionResult GetAllForThisGroup([FromRoute] int groupId)
+        public IActionResult GetAllForThisGroup([FromRoute] int groupId, string? withThis = null)
         {
             try
             {
-                return Ok(_AssemblyServices.GetAllForThisGroup(groupId).Select(c => c.ToDTO()));
+                if (withThis is null || withThis.Replace(" ","") == "")
+                    return Ok(_AssemblyServices.GetAllForThisGroup(groupId).Select(c => c.ToDTO()));
+                return Ok(_AssemblyServices.GetAllForThisGroupWithCriteria(groupId, withThis).Select(c => c.ToDTO()));
             }
             catch (NotFoundException nFException)
             {

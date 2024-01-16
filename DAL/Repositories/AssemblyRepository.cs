@@ -153,5 +153,30 @@ namespace DAL.Repositories
                 .Where(ga => ga.GroupId == groupId)
                 .Select(ga => ga.Assembly);
         }
+
+        public IEnumerable<AssemblyEntity> GetAssemblyForThisGroupWithCriteria(int groupId, string withThis)
+        {
+            return _MMContext.GroupAssemblies
+                .Include(ga => ga.Group)
+                .Include(a => a.Assembly)
+                .GroupJoin(_MMContext.LabelAssemblies
+                    .Include(la => la.Assembly)
+                    .Include(la => la.Label),
+                    ga => ga.Assembly.Id,
+                    la => la.Assembly.Id,
+                    (ga, la) => new { 
+                        assembly = ga.Assembly,
+                        group = ga.Group,
+                        labels = la.Select(la => la.Label)
+                    }
+                )
+                .Where(
+                    gla => gla.group.Id == groupId && (
+                        gla.assembly.Title.ToLower().Contains(withThis.ToLower()) ||
+                        gla.labels.Select(l => l.Title).Contains(withThis)
+                    )
+                )
+                .Select(ga => ga.assembly);
+        }
     }
 }
