@@ -81,7 +81,7 @@ namespace BLL.Services
             {
                 IdUsed(groupId);
                 _thinkerService.IdUsed(thinkerId);
-                return ((GroupRepository)_repository).AddThinkerToGroup(groupId, thinkerId, true);
+                return ((GroupRepository)_repository).AddThinkerToGroup(groupId, thinkerId, isowner);
             }
             catch (NotFoundException nFException)
             {
