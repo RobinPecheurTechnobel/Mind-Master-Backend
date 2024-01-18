@@ -3,6 +3,7 @@ using DAL.Entities;
 using DAL.Entities.Relations;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,13 +93,13 @@ namespace DAL.Repositories
 
             IEnumerable<ConceptIdeaEntity> cies = GetIdea(conceptIdea.ConceptId);
 
-            uint max = cies.Select(cie => cie.Order).Max();
+            uint max = cies.IsNullOrEmpty()?0:cies.Select(cie => cie.Order).Max();
 
-            if (conceptIdea.Order > max + 1) conceptIdea.Order = max + 1;
-            else if(cies.Where(cie => cie.Order == conceptIdea.Order).FirstOrDefault() is not null)
+            if (max == 0 || conceptIdea.Order > max + 1) conceptIdea.Order = max + 1;
+            else if (cies.Where(cie => cie.Order == conceptIdea.Order).FirstOrDefault() is not null)
             {
                 IEnumerable<ConceptIdeaEntity> ciesToMove = cies.Where(cie => cie.Order >= conceptIdea.Order);
-                foreach(ConceptIdeaEntity cie in ciesToMove)
+                foreach (ConceptIdeaEntity cie in ciesToMove)
                 {
                     cie.Order = cie.Order + 1;
                     _MMContext.Update(cie);

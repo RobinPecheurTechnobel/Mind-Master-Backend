@@ -18,7 +18,7 @@ namespace BLL.Mappers.Relations
                 Order = entity.Order,
                 Concept = entity.Concept.ToModel()
             };
-            if(entity.ConceptIdeas is not null && entity.ConceptIdeas.Count() > 1)
+            if(entity.ConceptIdeas is not null && entity.ConceptIdeas.Count() > 0)
             {
                 cam.Concept.Ideas = entity.ConceptIdeas.Select(ci => ci.ToConceptIdeaModel());
             }

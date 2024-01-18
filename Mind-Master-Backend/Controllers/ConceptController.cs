@@ -115,7 +115,7 @@ namespace Mind_Master_Backend.Controllers
             try
             {
                 int id = _ConceptServices.Create(concept.ToModel()).Id;
-                return CreatedAtAction(nameof(LabelController.GetOneById), new { labelId = id }, new { id });
+                return CreatedAtAction(nameof(ConceptController.GetOneById), new { labelId = id }, new { id });
             }
             catch (Exception exception)
             {
