@@ -98,7 +98,7 @@ namespace DAL.Repositories
             if (max == 0 || conceptIdea.Order > max + 1) conceptIdea.Order = max + 1;
             else if (cies.Where(cie => cie.Order == conceptIdea.Order).FirstOrDefault() is not null)
             {
-                IEnumerable<ConceptIdeaEntity> ciesToMove = cies.Where(cie => cie.Order >= conceptIdea.Order);
+                IEnumerable<ConceptIdeaEntity> ciesToMove = cies.Where(cie => cie.Order >= conceptIdea.Order && cie.Id != conceptIdea.Id);
                 foreach (ConceptIdeaEntity cie in ciesToMove)
                 {
                     cie.Order = cie.Order + 1;

@@ -61,7 +61,7 @@ namespace BLL.Services
             AssemblyModel model = _repository.GetOneById(id).ToModel();
 
             if (conceptAssemblies is  not null && conceptAssemblies.Count() > 0)
-                model.Concepts = conceptAssemblies.Select(ca =>ca.ToConceptAssmblyModel());
+                model.Concepts = conceptAssemblies.Select(ca => ca.ToConceptAssmblyModel());
 
             return model;
         }

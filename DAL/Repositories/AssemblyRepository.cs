@@ -133,7 +133,7 @@ namespace DAL.Repositories
             if (conceptAssembly.Order > max + 1) conceptAssembly.Order = max + 1;
             else if (caes.Where(cie => cie.Order == conceptAssembly.Order).FirstOrDefault() is not null)
             {
-                IEnumerable<ConceptAssemblyEntity> caesToMove = caes.Where(cae => cae.Order >= conceptAssembly.Order);
+                IEnumerable<ConceptAssemblyEntity> caesToMove = caes.Where(cae => cae.Order >= conceptAssembly.Order && cae.Id != conceptAssembly.Id);
                 foreach (ConceptAssemblyEntity cae in caesToMove)
                 {
                     cae.Order = cae.Order + 1;
