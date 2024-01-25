@@ -2,6 +2,8 @@
  
  Partie Backend de mon projet Makerhub
 
+ [Pour le Frontend, c'est ici !](https://github.com/RobinPecheurTechnobel/Mind-Master-Frontend)
+
 ## Schéma du projet
 
 <img width="1000" alt="Schéma du projet avec un focus sur la partie Backend" src="https://github.com/RobinPecheurTechnobel/Mind-Master-Backend/blob/assets/Schema-projet-BEFocused.png">
